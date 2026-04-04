@@ -24,7 +24,7 @@
     <main>
       <header class="bg-gray-100 text-center ">
         <div>
-            <h2 class="text-9xl font-bold text-center pt-10 ">
+            <h2 class="text-9xl font-bold text-center pt-10 " id="move">
               Organize your To-dos.
             </h2>
             <p class="text-3xl pt-5">
@@ -35,14 +35,7 @@
             
           
         </div>
-        <input type="email" placeholder="Email" class="py-3 pl-4 pr-25" />
-        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 ml-3 rounded">
-          Sign up- its's free!
-        </button>
-        <p class="pt-2">
-          By entering your email, you agree to our Terms of Service and Privacy
-          Policy.
-        </p>
+        
       </header>
       <section class="pl-60 pt-15">
         <h1 class="text-green-500 text-3xl font-bold">Your Productivity powerhouse</h1>
@@ -78,23 +71,39 @@
       </section>
 
       <section class="bg-green-500 text-center">
-        <h1>From message to action</h1>
-        Quickly turn communication from your favorite apps into to-dos,
-        keeping<br />
-        all your discussions and tasks organized in one place.
-        <div>
+        <h1 class="text-white text-4xl font-bold pt-7">From message to action</h1>
+        <p class="text-white pt-4">
+          Quickly turn communication from your favorite apps into to-dos,
+          keeping<br />
+          all your discussions and tasks organized in one place.
+        </p>
+        <div class="bg-white p-5 m-5 flex justify-around items-center">
           <img src="" alt="Trello 101" />
-          <h3>Email Magic</h3>
-          <p>hfjjkfjkkkkfhfhfhk</p>
+          <div>
+            <h3>Email Magic</h3>
+            <p>hfjjkfjkkkkfhfhfhk</p>
+          </div>
         </div>
-        <div>
+        <div class="bg-white p-5 m-5 flex justify-around items-center">
           <img src="" alt="Trello 101" />
+          <div>
           <h3>Message App Sorceery</h3>
           <p>hfjjkfjkkkkfhfhfhk</p>
         </div>
+        </div>
       </section>
-      <footer>
-        <div>
+      <section class="bg-gray-100 text-center pt-20 pb-20">
+        <input type="email" placeholder="Email" class="py-3 pl-4 pr-25 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-4 ml-3 rounded">
+          Sign up- its's free!
+        </button>
+        <p class="pt-2">
+          By entering your email, you agree to our Terms of Service and Privacy
+          Policy.
+        </p>
+      </section>
+      <footer class="pl-40 pr-40 bg-green-500" >
+        <div class="flex justify-around">
           <h3>Nexus</h3>
           <div>
             <p>About Nexus</p>
@@ -112,9 +121,10 @@
             <p>Need anything? Get in touch and<br />we can help.</p>
           </div>
         </div>
-        <div>
+        <div class="flex justify-around items-center pt-10">
+          <p>English</p>
           <select>
-            English
+            
           </select>
           <p>Privacy Policy</p>
           <p>Terms Copyright ©2024 Atlassion</p>
@@ -126,5 +136,7 @@
         </div>
       </footer>
     </main>
+    <script src="js/gsap.min.js"></script>
+    <script src="js/script.js"></script>
   </body>
 </html>
