@@ -36,13 +36,16 @@
             >
           </a>
 
-          <div class="flex items-center gap-4 text-sm">
-            <a href="/auth.html" class="font-semibold text-slate-700 transition hover:text[#0F0C29]">
+          <div class="flex items-center gap-4 text-sm" >
+            <a href="/auth.html#login" onclick="switchTab('login')" class="tab font-semibold text-slate-700 transition hover:text[#0F0C29]" id="tab-login">
               Log in
             </a>
             <a
-              href="/auth.html"
-              class="inline-flex items-center justify-center rounded-full bg-[#0F0C29] px-5 py-3 font-semibold text-white shadow-[0_8px_18px_rgba(34,200,238,0.16)] transition hover:-translate-y-0.5 hover:bg-[#252060]"
+              href="auth.html#signup"
+              onclick="switchTab('signup')"
+              class="tab inline-flex items-center justify-center rounded-full bg-[#0F0C29] px-5 py-3 font-semibold text-white shadow-[0_8px_18px_rgba(34,200,238,0.16)] transition hover:-translate-y-0.5 hover:bg-[#252060]"
+              id="tab-signup"
+
             >
               Sign up free
             </a>
