@@ -1,15 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-</head>
-<body>
+    <meta name="theme-color" content="#22d3ee" />
+    <link rel="icon" type="image/png" sizes="256x256" href="img/favicon.png" />
+    <link rel="shortcut icon" href="img/favicon.png" />
+    <link rel="apple-touch-icon" href="img/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./src/output.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a49d5f4a5c.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
     <main>
-        <nav></nav>
-        <section></section>
-        <section></section>
+      <nav
+      class="flex items-center justify-between gap-4 border-b border-slate-200 px-7 py-3 sm:px-10 bg-white"
+    >
+      <a
+        href="dashboard.html"
+        class="inline-flex items-center rounded-2xl px-1 py-1 transition hover:opacity-90"
+        aria-label="Nexus home"
+      >
+        <img
+          src="img/nexus_logoo.png"
+          alt="Nexus logo"
+          class="h-auto w-[8.5rem] object-contain sm:w-[13rem] lg:w-[8rem]"
+        />
+      </a>
+      <input type="text" placeholder="Search..." class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 focus:border-[#0F0C29] focus:ring-[#0F0C29] sm:w-auto ml-20" />
+      <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mr-30">Create</button>
+      <i class="fa-regular fa-bell"></i>
+      <i class="fa-regular fa-circle-question"></i>
+      <button class="bg-red-100 px-4 py-2 rounded-4xl">T</button>
+    </nav>
+    <div class="flex justify-between gap-4 px-7 py-3 sm:px-10">
+      <section>
+        <p>Boards</p>
+        <p>Members</p>
+        <p>Settings</p>
+        <p>Home</p>
+      </section>
+      <section >
+        <div class="flex">
+            <h1>Product</h1>
+            <button>4 members</button>
+            <div>
+                <button>Filter</button>
+                <button>Sort</button>
+                <button>+ Add task</button>
+            </div>
+        </div>
+      </section>
+    </div>
     </main>
-</body>
+  </body>
 </html>
