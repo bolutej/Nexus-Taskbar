@@ -17,7 +17,7 @@
     <link href="./src/output.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/a49d5f4a5c.js" crossorigin="anonymous"></script>
   </head>
-  <body>
+  <body class="font-['Clash Display'] bg-[#f4f7fb]">
     <main>
       <nav
       class="flex items-center justify-between gap-4 border-b border-slate-200 px-7 py-3 sm:px-10 bg-white"
@@ -40,20 +40,13 @@
       <button class="bg-red-100 px-4 py-2 rounded-4xl">T</button>
     </nav>
     <div class="flex justify-between gap-4 px-7 py-3 sm:px-10">
-      <section>
-        <p>Boards</p>
-        <p>Members</p>
-        <p>Settings</p>
-        <p>Home</p>
-      </section>
-      <section >
-        <div class="flex">
-            <h1>Product</h1>
-            <button>4 members</button>
+      <div class="flex">
+        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 hover:bg-slate-200 opacity-95" />
+      </div>
             <div>
-                <button>Filter</button>
-                <button>Sort</button>
-                <button>+ Add task</button>
+              <button class="bg-red-100 px-4 py-2 rounded-4xl mr-4">T</button>
+                <button class="bg-[#0f0c29] text-white px-4 py-2 rounded-lg hover:bg-[#252060] rounded transition"><i class="fa-solid fa-user-plus pr-6"></i>Share</button>
+                <i class="fa-solid fa-ellipsis"></i>
             </div>
         </div>
       </section>
