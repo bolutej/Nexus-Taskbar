@@ -17,7 +17,8 @@
     <link href="./src/output.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/a49d5f4a5c.js" crossorigin="anonymous"></script>
   </head>
-  <body class="font-['Clash Display'] bg-[#f4f7fb]">
+  <body class="font-['Clash Display']">
+    <!-- bg-[#f4f7fb] -->
     <main>
       <nav
       class="flex items-center justify-between gap-4 border-b border-slate-200 px-7 py-3 sm:px-10 bg-white"
@@ -39,18 +40,26 @@
       <i class="fa-regular fa-circle-question"></i>
       <button class="bg-red-100 px-4 py-2 rounded-4xl">T</button>
     </nav>
-    <div class="flex justify-between gap-4 px-7 py-3 sm:px-10">
-      <div class="flex">
-        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 hover:bg-slate-200 opacity-95" />
+    <section class="flex justify-between gap-4 px-7 py-3 sm:px-10 bg-white/30 ">
+      <div>
+        <input type="text" placeholder="Name..." class="px-4 py-2 w-20 hover:bg-slate-200 opacity-95" />
+        <button class="border border-[#c6c5c6] px-7 py-2 rounded-4xl ml-10 ">4 members</button>
       </div>
             <div>
-              <button class="bg-red-100 px-4 py-2 rounded-4xl mr-4">T</button>
-                <button class="bg-[#0f0c29] text-white px-4 py-2 rounded-lg hover:bg-[#252060] rounded transition"><i class="fa-solid fa-user-plus pr-6"></i>Share</button>
+                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-filter"></i>Filter</button>
+                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-plus"></i>Add Task</button>
+                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-user-plus pr-6"></i>Share</button>
                 <i class="fa-solid fa-ellipsis"></i>
             </div>
-        </div>
       </section>
     </div>
+    <section>
+      <div>
+        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 hover:bg-slate-200 opacity-95" />
+      </div>
+      <div></div>
+      <div></div>
+    </section>
     </main>
   </body>
 </html>
