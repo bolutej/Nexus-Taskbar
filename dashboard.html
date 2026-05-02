@@ -1,73 +1,454 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-    <meta name="theme-color" content="#22d3ee" />
-    <link rel="icon" type="image/png" sizes="256x256" href="img/favicon.png" />
-    <link rel="shortcut icon" href="img/favicon.png" />
-    <link rel="apple-touch-icon" href="img/favicon.png" />
+    <title>Nexus &mdash; NEX board</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link href="./src/output.css" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/a49d5f4a5c.js" crossorigin="anonymous"></script>
   </head>
-  <body class="font-['Clash Display']">
-    <!-- bg-[#f4f7fb] -->
-    <main>
-      <nav
-      class="flex items-center justify-between gap-4 border-b border-slate-200 px-7 py-3 sm:px-10 bg-white"
+  <body
+    class="min-h-screen bg-[#f6f7fb] bg-[radial-gradient(900px_600px_at_0%_0%,#e9f2ff_0%,transparent_60%),radial-gradient(900px_600px_at_100%_0%,#eef0f7_0%,transparent_55%),linear-gradient(180deg,#f6f7fb_0%,#eceff5_100%)] bg-fixed font-['Inter'] text-[14px] text-[#172b4d] antialiased"
+  >
+    <nav
+      class="mx-6 mt-4 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-[16px] bg-white px-[1.1rem] py-2 pr-[0.6rem] shadow-[0_4px_12px_rgba(9,30,66,0.1)] max-[960px]:m-[0.6rem] max-[960px]:grid-cols-[auto_auto] max-[960px]:gap-[0.6rem]"
     >
-      <a
-        href="dashboard.html"
+      <div class="inline-flex min-w-0 items-center gap-[0.55rem] pr-2">
+        <a
+        href="index.html"
         class="inline-flex items-center rounded-2xl px-1 py-1 transition hover:opacity-90"
         aria-label="Nexus home"
       >
         <img
           src="img/nexus_logoo.png"
           alt="Nexus logo"
-          class="h-auto w-[8.5rem] object-contain sm:w-[13rem] lg:w-[8rem]"
+          class="h-auto w-[8.5rem] object-contain sm:w-[13rem] lg:w-[11.5rem]"
         />
       </a>
-      <input type="text" placeholder="Search..." class="flex-1 rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 focus:border-[#0F0C29] focus:ring-[#0F0C29] sm:w-auto ml-20" />
-      <button class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition mr-30">Create</button>
-      <i class="fa-regular fa-bell"></i>
-      <i class="fa-regular fa-circle-question"></i>
-      <button class="bg-red-100 px-4 py-2 rounded-4xl">T</button>
+        <span
+          class="mx-[0.4rem] h-[22px] w-px bg-[#dfe1e6] max-[960px]:hidden"
+          aria-hidden="true"
+        ></span>
+        <span
+          class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.86rem] max-[960px]:hidden"
+        >
+          <span class="mr-1 text-[#97a0af]">Projects /</span>
+          <span class="font-medium text-[#5e6c84]">NEX board</span>
+        </span>
+      </div>
+
+      <div
+        class="relative flex h-[38px] items-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-4 pl-[2.4rem] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus-within:border-[#1868db] focus-within:bg-white focus-within:ring-2 focus-within:ring-[rgba(24,104,219,0.18)] max-[960px]:order-3 max-[960px]:col-[1/-1] max-[960px]:h-9"
+      >
+        <svg
+          class="absolute left-[0.85rem] text-[#97a0af]"
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
+        <input
+          type="search"
+          class="h-full w-full border-0 bg-transparent text-[0.88rem] text-[#172b4d] outline-none placeholder:text-[#97a0af]"
+          placeholder="Search issues, projects, people..."
+          aria-label="Search"
+        />
+      </div>
+
+      <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
+        <button
+          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px]"
+          id="createBtn"
+          type="button"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Create
+        </button>
+        <button
+          class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
+          type="button"
+          aria-label="Notifications"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+          </svg>
+        </button>
+        <button
+          class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
+          type="button"
+          aria-label="Help"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4" />
+            <path d="M12 17h.01" />
+          </svg>
+        </button>
+        <div
+          class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
+          aria-label="Account"
+        >
+          T
+        </div>
+      </div>
     </nav>
-    <section class="flex justify-between gap-4 px-7 py-3 sm:px-10 bg-white/30 ">
-      <div>
-        <input type="text" placeholder="Name..." class="px-4 py-2 w-20 hover:bg-slate-200 opacity-95" />
-        
+
+    <header
+      class="mx-6 mt-4 flex flex-wrap items-center justify-between gap-5 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem]"
+    >
+      <div class="min-w-0">
+        <p class="mb-1 text-[0.7rem] font-semibold tracking-[0.12em] text-[#1868db]">
+          SPRINT 12 &middot; NEX BOARD
+        </p>
+        <h1 class="m-0 text-[1.4rem] font-bold tracking-[-0.018em] text-[#172b4d]">
+          Product Design Sprint
+        </h1>
+        <p class="mt-[0.3rem] text-[0.84rem] text-[#5e6c84]">
+          <span id="taskSummary">&mdash; in progress</span> &middot; Last updated
+          <span id="lastUpdated">just now</span>
+        </p>
       </div>
-            <div>
-              <button class="border border-[#c6c5c6] px-7 py-2 rounded-4xl mr-2">4 members</button>
-                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-filter"></i>Filter</button>
-                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-plus"></i>Add Task</button>
-                <button class="border border-[#c6c5c6] px-7 py-2 rounded-lg mr-2 text-[17px]"><i class="fa-solid fa-user-plus pr-6"></i>Share</button>
-                <i class="fa-solid fa-ellipsis"></i>
+
+      <div class="inline-flex flex-wrap items-center gap-[0.4rem]">
+        <button
+          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+          type="button"
+        >
+          <span class="mr-[0.15rem] inline-flex" aria-hidden="true">
+            <span
+              class="member inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+            >
+              T
+            </span>
+            <span
+              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FFC400] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+            >
+              A
+            </span>
+            <span
+              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#36B37E] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+            >
+              M
+            </span>
+            <span
+              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#6554C0] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+            >
+              K
+            </span>
+          </span>
+          4 members
+        </button>
+        <button
+          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+          type="button"
+        >
+          <svg
+            class="text-[#5e6c84]"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M3 5h18l-7 9v6l-4-2v-4L3 5z" />
+          </svg>
+          Filter
+        </button>
+        <button
+          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+          type="button"
+          id="addTaskBtn"
+        >
+          <svg
+            class="text-[#5e6c84]"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Add issue
+        </button>
+        <button
+          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+          type="button"
+        >
+          <svg
+            class="text-[#5e6c84]"
+            viewBox="0 0 24 24"
+            width="15"
+            height="15"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5" />
+          </svg>
+          Share
+        </button>
+        <button
+          class="inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-0 text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+          type="button"
+          aria-label="More"
+        >
+          <svg
+            class="text-[#5e6c84]"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="5" cy="12" r="1.2" />
+            <circle cx="12" cy="12" r="1.2" />
+            <circle cx="19" cy="12" r="1.2" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section
+      class="grid grid-cols-3 gap-[0.85rem] px-6 pb-10 pt-4 max-[960px]:mx-[0.6rem] max-[960px]:grid-cols-1 max-[960px]:p-[0.6rem]"
+      id="board"
+      aria-label="Kanban board"
+    ></section>
+
+    <div
+      class="fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
+      id="modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="fixed inset-0 bg-[rgba(9,30,66,0.55)] backdrop-blur-[4px]" data-close></div>
+      <div
+        class="relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
+        role="document"
+      >
+        <header class="flex items-center justify-between border-b border-[#dfe1e6] px-5 py-[0.85rem] pr-4">
+          <div class="inline-flex items-center gap-2">
+            <span
+              class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
+              id="modalTypeIcon"
+            ></span>
+            <span
+              class="text-[0.84rem] font-semibold tracking-[0.02em] text-[#5e6c84]"
+              id="modalKey"
+            >
+              NEX-0
+            </span>
+          </div>
+          <button
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d]"
+            type="button"
+            aria-label="Close"
+            data-close
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="grid grid-cols-[1.6fr_minmax(0,1fr)] gap-6 overflow-y-auto px-6 py-5 max-[960px]:grid-cols-1 max-[960px]:gap-4 max-[960px]:p-4">
+          <div class="min-w-0">
+            <input
+              class="-mx-[0.55rem] mb-3 w-[calc(100%+1.1rem)] rounded-[6px] border border-transparent bg-transparent px-[0.55rem] py-[0.4rem] text-[1.4rem] font-bold tracking-[-0.015em] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#f4f5f7] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+              id="modalTitle"
+              type="text"
+              placeholder="Issue title"
+            />
+
+            <section class="mt-4">
+              <p class="mb-[0.4rem] text-[0.72rem] font-bold uppercase tracking-[0.06em] text-[#5e6c84]">
+                Description
+              </p>
+              <textarea
+                class="min-h-[90px] w-full resize-y rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.8rem] py-[0.7rem] text-[0.92rem] leading-[1.55] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+                id="modalDesc"
+                rows="5"
+                placeholder="Add a description..."
+              ></textarea>
+            </section>
+          </div>
+
+          <aside class="self-start rounded-[8px] border border-[#dfe1e6] bg-[#fafbfc] px-4 pb-4 pt-[0.85rem]">
+            <p class="mb-[0.65rem] text-[0.7rem] font-bold uppercase tracking-[0.08em] text-[#5e6c84]">
+              Details
+            </p>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Status</span>
+              <select
+                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+                id="modalStatus"
+              ></select>
             </div>
-      </section>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Priority</span>
+              <select
+                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+                id="modalPriority"
+              >
+                <option value="highest">&uarr;&uarr; Highest</option>
+                <option value="high">&uarr; High</option>
+                <option value="medium">= Medium</option>
+                <option value="low">&darr; Low</option>
+                <option value="lowest">&darr;&darr; Lowest</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Type</span>
+              <select
+                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+                id="modalType"
+              >
+                <option value="task">Task</option>
+                <option value="story">Story</option>
+                <option value="bug">Bug</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-2 border-b border-[#dfe1e6] py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Labels</span>
+              <div class="label-picker flex flex-wrap gap-[0.3rem]" id="modalLabels"></div>
+            </div>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Assignee</span>
+              <div class="inline-flex items-center gap-[0.4rem]">
+                <span
+                  class="member m-0 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+                >
+                  T
+                </span>
+                <span class="text-[0.84rem] text-[#172b4d]">You</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Created</span>
+              <span class="text-[0.82rem] text-[#172b4d]" id="modalCreated">&mdash;</span>
+            </div>
+          </aside>
+        </div>
+
+        <footer class="flex justify-between gap-2 border-t border-[#dfe1e6] bg-[#fafbfc] px-5 py-[0.85rem]">
+          <button
+            class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
+            type="button"
+            id="modalDelete"
+          >
+            Delete
+          </button>
+          <button
+            class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6]"
+            type="button"
+            data-close
+          >
+            Done
+          </button>
+        </footer>
+      </div>
     </div>
-    <section class="flex">
-      <div class="flex justify-between bg-green-100 w-50">
-        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 opacity-95" />
-        <i class="fa-solid fa-ellipsis pt-3.5"></i>
-      </div>
-      <div class="flex bg-green-100 ml-20">
-        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 opacity-95" />
-        <i class="fa-solid fa-ellipsis pt-3.5"></i>
-      </div>
-      <div class="flex bg-green-100">
-        <input type="text" placeholder="Search..." class="px-4 py-2 w-20 opacity-95" />
-        <i class="fa-solid fa-ellipsis pt-3.5"></i>
-      </div>
-    </section>
-    </main>
+
+    <template id="cardTemplate">
+      <article
+        class="card relative cursor-pointer rounded-[8px] bg-white px-[0.85rem] pb-[0.6rem] pt-[0.7rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] transition-all duration-150 ease-in-out hover:bg-[#fafbfc] hover:shadow-[0_1px_2px_rgba(9,30,66,0.06)] active:cursor-grabbing [&.is-dragging]:rotate-[1deg] [&.is-dragging]:opacity-50"
+        draggable="true"
+      >
+        <div class="card-labels mb-[0.4rem] flex flex-wrap gap-[0.3rem] [&:empty]:hidden"></div>
+        <h3 class="card-title m-0 text-[0.88rem] font-medium leading-[1.4] text-[#172b4d]"></h3>
+        <div class="mt-[0.6rem] flex items-center justify-between gap-2">
+          <span class="inline-flex items-center gap-[0.4rem]">
+            <span
+              class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
+            ></span>
+            <span class="card-key text-[0.74rem] font-medium tracking-[0.02em] text-[#5e6c84]"></span>
+          </span>
+          <span class="inline-flex items-center gap-[0.4rem]">
+            <span
+              class="priority-icon inline-flex h-4 w-4 items-center justify-center text-[0.78rem] font-extrabold leading-none data-[priority=highest]:text-[#cd1316] data-[priority=high]:text-[#de350b] data-[priority=medium]:text-[#ff991f] data-[priority=low]:text-[#2684ff] data-[priority=lowest]:text-[#6554c0]"
+            ></span>
+            <span
+              class="member card-assignee ml-0 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
+            >
+              T
+            </span>
+          </span>
+        </div>
+      </article>
+    </template>
+
+    <script src="dashboard.js"></script>
   </body>
 </html>
