@@ -18,7 +18,37 @@ function switchTab(tab) {
 }
 
 
-window.addEventListener('DOMContentLoaded', () => {
-  const hash = window.location.hash.replace('#', '');
-  if (hash === 'signup' || hash === 'login') switchTab(hash);
-});
+// js/auth.js
+import { auth } from "../firebase.js";
+import { sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-auth.js";
+
+const actionCodeSettings = {
+  url: "http://localhost:5500/dashboard.html", // ← your redirect page
+  handleCodeInApp: true,
+};
+
+export async function sendEmailLink(email) {
+  await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+  window.localStorage.setItem("emailForSignIn", email);
+}
+
+export async function completeSignIn() {
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    let email = window.localStorage.getItem("emailForSignIn");
+    if (!email) {
+      email = window.prompt("Please enter your email:");
+    }
+    const result = await signInWithEmailLink(auth, email, window.location.href);
+    window.localStorage.removeItem("emailForSignIn");
+    return result.user;
+  }
+}
+// js/auth.js — add this
+import { GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-auth.js";
+
+const provider = new GoogleAuthProvider();
+
+export async function signInWithGoogle() {
+  const result = await signInWithPopup(auth, provider);
+  return result.user;
+}
