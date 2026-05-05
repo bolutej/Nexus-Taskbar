@@ -50,7 +50,7 @@
               Create a New Account
             </h1>
             <p class="text-sm text-[#64748b]">
-              Enter your email to receive a secure link, or sign up with your
+              Enter your email to receive a secure link, or sign in with your
               Google account.
             </p>
           </div>
@@ -73,6 +73,7 @@
               >
               <input
                 type="email"
+                id="email"
                 placeholder="you@example.com"
                 class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 text-[#0F0C29] placeholder-[#cbd5e1] focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 focus:bg-white transition"
               />
@@ -90,6 +91,7 @@
               Get Started Free
             </a>
           </button>
+          <p id="error-msg" style="color:red;"></p>
           <!-- Divider -->
           <div class="relative mb-6 mt-3">
             <div class="absolute inset-0 flex items-center">
@@ -176,6 +178,7 @@
               >
               <input
                 type="email"
+                id="email"
                 placeholder="you@example.com"
                 class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 text-[#0F0C29] placeholder-[#cbd5e1] focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 focus:bg-white transition"
               />
@@ -188,7 +191,7 @@
           >
             Log In
           </button>
-
+          <p id="error-msg" style="color:red;"></p>
           <div class="relative mb-6 mt-3">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-slate-200"></div>
@@ -246,24 +249,8 @@
     </main>
 
     <script src="js/gsap.min.js"></script>
-    <script src="js/auth.js"></script>
-    <script type="module">
-      import { sendEmailLink } from "./js/auth.js";
-
-      document.getElementById("sendBtn").addEventListener("click", async () => {
-        const email = document.getElementById("email").value;
-        await sendEmailLink(email);
-        alert("Check your email for the sign-in link!");
-      });
-
-      import { signInWithGoogle } from "./js/auth.js";
-
-      document
-        .getElementById("googleBtn")
-        .addEventListener("click", async () => {
-          const user = await signInWithGoogle();
-          window.location.href = "dashboard.html";
-        });
-    </script>
+    <script src="js/ui.js"></script>
+    <script type="module" src="js/auth.js"></script>
+    
   </body>
 </html>

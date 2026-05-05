@@ -1,27 +1,42 @@
-  import { completeSignIn } from "./js/auth.js";
-
-  const user = await completeSignIn();
-  if (user) {
-    document.getElementById("status").textContent = `Welcome, ${user.email}!`;
-  }
-// js/dashboard.js
 import { auth } from "../firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-auth.js";
+import {
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-onAuthStateChanged(auth, (user) => {
+import { completeSignIn } from "./auth.js";
+
+// Complete email link sign-in if redirected from email
+completeSignIn().then((user) => {
   if (user) {
-    console.log("Signed in as:", user.email);
-    // show dashboard content
-  } else {
-    // not signed in, redirect back to login
-    window.location.href = "auth.html";
+    console.log("Email link sign-in complete:", user.email);
   }
 });
 
-// js/dashboard.js — add this
-import { signOut } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-auth.js";
+// Protect dashboard — redirect if not signed in
+export function watchAuthState() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Signed in as:", user.email);
 
+      const emailEl = document.getElementById("user-email");
+      const nameEl = document.getElementById("user-name");
+
+      if (emailEl) emailEl.textContent = user.email;
+      if (nameEl) nameEl.textContent = user.displayName ?? "No name set";
+    } else {
+      window.location.href = "auth.html";
+    }
+  });
+}
+
+// Log out
 export async function logOut() {
-  await signOut(auth);
-  window.location.href = "auth.html";
+  try {
+    await signOut(auth);
+    window.location.href = "auth.html";
+  } catch (error) {
+    console.error("Sign-out error:", error.message);
+    throw error;
+  }
 }
