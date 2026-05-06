@@ -1,4 +1,3 @@
-
 // ✅ One combined import from a single, real version URL
 import { auth } from "../firebase.js";
 import {
