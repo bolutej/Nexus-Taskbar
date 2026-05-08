@@ -43,7 +43,7 @@
 
     <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
       <button
-        class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#0F0C29] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px]"
+        class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#0F0C29] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px] mr-35"
         id="createBtn" type="button">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"
           stroke-linecap="round" stroke-linejoin="round">
@@ -126,25 +126,34 @@
     </div>
   <section class="px-4 py-5 flex gap-9">
     <div class="bg-[#f6f7fb] rounded-lg px-8 py-5 w-[32%]">
-      <button class="border px-5 py-2 rounded-full text-[#4f46e5]"><i class="fa-solid fa-circle pr-1"></i>Active</button>
-      <h1>Nex Board</h1>
-      <h1>Product Design Sprint Tracking</h1>
-      <p>100% completed</p>
-      <button>View</button>
+      <div class="flex justify-between">
+        <input type="search"
+        class="px-3 py-2 text-[0.88rem] text-[#172b4d] placeholder:text-[#97a0af] w-[20rem]"
+        placeholder="Project Name" aria-label="Search" />
+      <svg
+            class="text-[#5e6c84] mt-3"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="5" cy="12" r="1.2" />
+            <circle cx="12" cy="12" r="1.2" />
+            <circle cx="19" cy="12" r="1.2" />
+          </svg>
+        </div>
+      
+      <p class="font-bold text-lg">Product Design Sprint Tracking</p>
     </div>
-    <div class="bg-[#f6f7fb] rounded-lg px-8 py-5 w-[32%]">
-      <h1>Project Name</h1>
-      <h1>Project Description</h1>
     </div>
-    <div class="bg-[#f6f7fb] rounded-lg px-8 py-5 w-[32%]">
-      <h1>Project Name</h1>
-      <h1>Project Description</h1>
-    </div>
-    
   </section>
   </main>
 
-  <script src="dashboard.js"></script>
+  <script src="./js/projects.js"></script>
 </body>
 
 </html>
