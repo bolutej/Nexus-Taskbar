@@ -128,16 +128,10 @@
       </button>
     </div>
   </header>
-  <main class="mx-6 mt-3 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem]">
-    <div class="flex gap-3 px-5 py-2 rounded-lg">
-      <button class="border px-5 py-2 rounded-full text-[#4f46e5]"><i class="fa-solid fa-circle pr-1"></i>Active</button>
-      <button class="border px-5 py-2 rounded-full text-[#ff8f73]"><i class="fa-solid fa-pause pr-1"></i> Paused</button>
-      <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
-    </div>
   <section class="">
     <div
     id="modal-backdrop"
-    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex items-center justify-center p-4"
+    class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex items-center justify-center p-4"
     aria-hidden="true"
   >
     <!-- Modal panel -->
@@ -234,15 +228,62 @@
   </div>
  
   <!-- Success toast -->
-  <!-- <div
+  <div
     id="toast"
     class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 translate-y-2 z-50"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     <span id="toast-msg">Project created!</span>
-  </div> -->
+  </div>
     
   </section>
+  <main id="card" class="mx-6 mt-3 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem]">
+    <div class="flex gap-3 px-5 py-2 rounded-lg">
+      <button class="border px-5 py-2 rounded-full text-[#4f46e5]"><i class="fa-solid fa-circle pr-1"></i>Active</button>
+      <button class="border px-5 py-2 rounded-full text-[#ff8f73]"><i class="fa-solid fa-pause pr-1"></i> Paused</button>
+      <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
+    </div>
+
+    <div class="bg-[#f6f7fb] rounded-lg px-8 py-5 w-[32%]">
+      <div class="flex justify-between">
+        <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
+      <svg
+            class="text-[#5e6c84] mt-3"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="5" cy="12" r="1.2" />
+            <circle cx="12" cy="12" r="1.2" />
+            <circle cx="19" cy="12" r="1.2" />
+          </svg>
+        </div>
+        <input
+            id="card-title"
+            type="text"
+            placeholder="Nex Board"
+            maxlength="25"
+            class="font-bold text-xl pt-3"
+            />
+            <input
+            id="card-desc"
+            type="text"
+            placeholder="Product Design Sprint "
+            maxlength="30"
+            class="font-bold text-lg"
+            />
+      <p id="card-bar" class="pt-2">100% completed</p>
+      <div class="flex justify-between pt-10">
+      <a href=""><button class="hover:underline">View</button></a>
+      <p>14 open issue</p>
+    </div>
+    </div>
+  
   </main>
 
   <script src="./js/projects.js"></script>
