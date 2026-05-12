@@ -105,7 +105,7 @@ form.addEventListener('submit', (e) => {
         setTimeout(resetForm, 220);
         showToast('"' + title + '"created successfully');
     }, 900);
-});
+}); 
 
 let toastTimer;
 
@@ -120,7 +120,8 @@ function showToast(msg) {
     }, 3000)
 }
 
-function showCard(title) {
-    cardTitle.textContent = cardTitle.value;
-    card.classList
+function showCard(msg) {
+    cardTitle.textContent = msg;
+    card.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+    card.classList.add('opacity-100', 'translate-y-0');
 }
