@@ -13,8 +13,6 @@ const titleError = document.getElementById('title-error')
 const submitBtn = document.getElementById('submit-btn');
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toast-msg');
-const card = document.getElementById('card');
-const cardTitle = document.getElementById('card-title');
 
 
 function openModal() {
@@ -87,6 +85,8 @@ descInput.addEventListener('input', () => {
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const title = titleInput.value.trim();
+    const description = descInput.value.trim();
+
     if (!title) {
         titleError.classList.remove('hidden');
         titleInput.classList.add('border-red-500', 'bg-red-500');
@@ -95,9 +95,11 @@ form.addEventListener('submit', (e) => {
     }
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = `<span class="spinner"></span> Creating..`;
+    submitBtn.innerHTML = `<span class="spinner"></span> Creating...`;
 
     setTimeout(() => {
+        createProjectCard(title, description);
+        
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Create project`;
@@ -120,8 +122,52 @@ function showToast(msg) {
     }, 3000)
 }
 
-function showCard(msg) {
-    cardTitle.textContent = msg;
-    card.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
-    card.classList.add('opacity-100', 'translate-y-0');
+function createProjectCard(title, description) {
+    const container = document.getElementById('projects-container');
+
+    const card = document.createElement('div');
+    card.className = 'bg-white border border-slate-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow duration-200 px-8 py-5 w-[32%]'
+
+    card.innerHTML = `
+       <div class="">
+        <div class="flex justify-between">
+          <span class="ml-3 inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full">
+            <i class="fa-solid fa-circle text-[6px]"></i>
+            Active
+          </span>
+        <svg
+              class="text-[#5e6c84] mt-3"
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="5" cy="12" r="1.2" />
+              <circle cx="12" cy="12" r="1.2" />
+              <circle cx="19" cy="12" r="1.2" />
+            </svg>
+          </div>
+        <h1 class="font-bold text-xl pt-3">${title}</h1>
+        <p class="font-bold text-lg">${description}</p>
+        <p class="pt-2">100% completed</p>
+        <div class="flex justify-between pt-10">
+        <a href=""><button class="hover:underline">View</button></a>
+        <span><i class="fa-regular fa-calendar mr-1"></i>${new Date().toLocaleDateString()}</span>
+      </div>
+      </div>
+    `;
+
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(-10px)';
+    container.insertBefore(card, container.firstChild);
+
+    requestAnimationFrame(() => {
+        card.style.transition = 'opacity 300ms ease, transform 300ms ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+    })
 }
