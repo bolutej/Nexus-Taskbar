@@ -51,17 +51,9 @@
     </div>
 
     <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
+      
       <button
-        class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#0F0C29] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px] mr-35"
-       type="button">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"
-          stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        New Project
-      </button>
-      <button
-        class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
+        class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px] ml-50"
         type="button" aria-label="Notifications">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
           stroke-linecap="round" stroke-linejoin="round">
@@ -84,6 +76,7 @@
         aria-label="Account">
         T
       </div>
+      
     </div>
   </nav>
   
@@ -97,7 +90,7 @@
         All Projects
       </h1>
       <p class="mt-[0.3rem] text-[0.84rem] text-[#5e6c84]">
-        <span id="taskSummary">&mdash; 5 Projects across 2 teams
+        <span id="task-summary">&mdash; 0 Projects across 2 teams
       </p>
     </div>
 
@@ -131,7 +124,7 @@
   
   <main id="card" class="mx-6 mt-3 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem] opacity-0' 'translate-y-2' 'pointer-events-none">
     <div class="flex gap-3 px-5 py-2 rounded-lg">
-      <button class="border px-5 py-2 rounded-full text-[#4f46e5]"><i class="fa-solid fa-circle pr-1"></i>Active</button>
+      <button class="border px-5 py-2 rounded-full text-[#4f46e5] bg-indigo-50"><i class="fa-solid fa-circle pr-1"></i>Active</button>
       <button class="border px-5 py-2 rounded-full text-[#ff8f73]"><i class="fa-solid fa-pause pr-1"></i> Paused</button>
       <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
     </div>
@@ -244,7 +237,7 @@
     </div>
       
     </section>
-    <div id="projects-container" class="mt-6 px-4 py-5 flex gap-9">
+    <div id="projects-container" class="mt-6 px-4 py-5 flex flex-wrap gap-3">
       
     </div>
   

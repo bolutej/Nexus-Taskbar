@@ -425,6 +425,12 @@
   .ml-3 {
     margin-left: calc(var(--spacing) * 3);
   }
+  .ml-30 {
+    margin-left: calc(var(--spacing) * 30);
+  }
+  .ml-50 {
+    margin-left: calc(var(--spacing) * 50);
+  }
   .ml-auto {
     margin-left: auto;
   }

@@ -25,7 +25,7 @@ function openModal() {
 function closeModal() {
     backdrop.classList.remove('open');
     panel.classList.remove('open');
-    setTimeout(() => backdrop.classListadd('hidden'), 220);
+    setTimeout(() => backdrop.classList.add('hidden'), 220);
 }
 
 function resetForm() {
@@ -170,4 +170,9 @@ function createProjectCard(title, description) {
         card.style.opacity = '1';
         card.style.transform = 'translateY(0)';
     })
+    // container.insertBefore(card, container.firstChild);
+
+    const totalCards = container.children.length;
+    const taskSummary = document.getElementById('task-summary');
+    taskSummary.textContent = `— ${totalCards} Project${totalCards !== 1 ? 's' : ''} across 2 teams`
 }
