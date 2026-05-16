@@ -1,3 +1,4 @@
+//Create Project Modal 
 const openBtn = document.getElementById('open-modal-btn');
 const closeBtn = document.getElementById('close-modal-btn');
 const backdrop = document.getElementById('modal-backdrop');
@@ -13,6 +14,28 @@ const titleError = document.getElementById('title-error')
 const submitBtn = document.getElementById('submit-btn');
 const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toast-msg');
+
+//Profile Modal
+const profileBackdrop = document.getElementById('profile-backdrop');
+const profilePanel = document.getElementById('profile-panel');
+const openProfileBtn = document.getElementById('open-profile-btn');
+const closeProfileBtn = document.getElementById('close-profile-btn');
+const cancelProfileBtn = document.getElementById('cancel-profile-btn');
+const profileForm = document.getElementById('profile-form');
+const firstInput = document.getElementById('first-name');
+const lastInput = document.getElementById('last-name');
+const emailInput = document.getElementById('profile-email');
+const roleSelect = document.getElementById('profile-role');
+const saveBtn = document.getElementById('save-profile-btn');
+const avatarCircle = document.getElementById('avatar-circle');
+const avatarName = document.getElementById('avatar-name');
+const avatarRole = document.getElementById('avatar-role');
+const emailError = document.getElementById('email-error');
+const profileToast = document.getElementById('profile-toast');
+const profileToastMsg = document.getElementById('profile-toast-msg');
+const avatarUpload = document.getElementById('avatar-upload');
+
+
 
 
 function openModal() {
@@ -131,7 +154,7 @@ function createProjectCard(title, description) {
     card.innerHTML = `
        <div class="">
         <div class="flex justify-between">
-          <span class="ml-3 inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full">
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full">
             <i class="fa-solid fa-circle text-[6px]"></i>
             Active
           </span>
@@ -152,7 +175,7 @@ function createProjectCard(title, description) {
             </svg>
           </div>
         <h1 class="font-bold text-xl pt-3">${title}</h1>
-        <p class="font-bold text-lg">${description}</p>
+        <p class="font-bold text-lg text-slate-200">${description}</p>
         <p class="pt-2">100% completed</p>
         <div class="flex justify-between pt-10">
         <a href=""><button class="hover:underline">View</button></a>
@@ -176,3 +199,35 @@ function createProjectCard(title, description) {
     const taskSummary = document.getElementById('task-summary');
     taskSummary.textContent = `— ${totalCards} Project${totalCards !== 1 ? 's' : ''} across 2 teams`
 }
+
+
+//Profile Modal
+
+function openProfileModal() {
+    profileBackdrop.classList.remove('hidden');
+    requestAnimationFrame(() => {
+        profileBackdrop.classList.add('open');
+        profilePanel.classList.add('open');
+    });
+}
+
+function closeProfileModal() {
+    profileBackdrop.classList.remove('open');
+    profilePanel.classList.remove('open');
+    setTimeout(() => profileBackdrop.classList.add('hidden'), 220);
+}
+
+openProfileBtn.addEventListener('click', openProfileModal);
+
+[closeProfileBtn, cancelProfileBtn].forEach(btn => btn.addEventListener('click', closeProfileModal));
+
+profileBackdrop.addEventListener('click', (e) => {
+    if(e.target === profileBackdrop) 
+        closeProfileModal();
+})
+
+document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && profileBackdrop.classList.contains('open')) 
+        closeProfileModal();
+    
+})

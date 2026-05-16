@@ -19,6 +19,14 @@
     input:focus, textarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
     @keyframes spin { to { transform: rotate(360deg); } }
     .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    /* Profile backdrop */
+    #profile-backdrop { opacity: 0; transition: opacity 200ms ease; }
+    #profile-backdrop.open { opacity: 1; }
+    #profile-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+    #profile-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+    input:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.12); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
 </style>
 </head>
 
@@ -71,12 +79,113 @@
           <path d="M12 17h.01" />
         </svg>
       </button>
-      <div
+      <button
+        id="open-profile-btn"
         class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
         aria-label="Account">
         T
+      </button>
+      <div id="profile-backdrop"
+    class="hidden fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+ 
+    <!-- Panel -->
+    <div id="profile-panel" role="dialog" aria-modal="true" aria-labelledby="profile-title"
+      class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+ 
+      <!-- Header -->
+      <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+        <div>
+          <h2 id="profile-title" class="text-[17px] font-semibold text-[#0F0C29]">Profile</h2>
+          <p class="text-sm text-slate-400 mt-0.5">Manage your personal info</p>
+        </div>
+        <button id="close-profile-btn" aria-label="Close"
+          class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition-colors -mt-0.5 -mr-1">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
-      
+ 
+      <!-- Avatar section -->
+      <div class="flex items-center gap-4 px-6 py-5 border-b border-slate-100">
+        <div id="avatar-circle"
+          class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-semibold text-white flex-shrink-0"
+          style="background: linear-gradient(135deg, #ff8f73, #ff5630);">
+          T
+        </div>
+        <div>
+          <p id="avatar-name" class="text-[15px] font-semibold text-[#0F0C29]">Tolu Adeyemi</p>
+          <p id="avatar-role" class="text-sm text-slate-400 mt-0.5 mb-3">Product Designer</p>
+          <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Change photo
+            <input type="file" accept="image/*" class="hidden" id="avatar-upload" />
+          </label>
+        </div>
+      </div>
+ 
+      <!-- Form fields -->
+      <form id="profile-form" novalidate>
+        <div class="px-6 py-5 flex flex-col gap-4">
+ 
+          <!-- First & Last name -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex flex-col gap-1.5">
+              <label for="first-name" class="text-xs font-medium text-slate-500">First name</label>
+              <input id="first-name" type="text" value="Tolu"
+                class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="last-name" class="text-xs font-medium text-slate-500">Last name</label>
+              <input id="last-name" type="text" value="Adeyemi"
+                class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors" />
+            </div>
+          </div>
+ 
+          <!-- Email -->
+          <div class="flex flex-col gap-1.5">
+            <label for="profile-email" class="text-xs font-medium text-slate-500">Email address</label>
+            <input id="profile-email" type="email" value="tolu@nexus.io"
+              class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors" />
+            <p id="email-error" class="text-xs text-red-500 hidden">Please enter a valid email.</p>
+          </div>
+ 
+          <!-- Role -->
+          <div class="flex flex-col gap-1.5">
+            <label for="profile-role" class="text-xs font-medium text-slate-500">Role</label>
+            <select id="profile-role"
+              class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors">
+              <option>Product Designer</option>
+              <option>Frontend Developer</option>
+              <option>Backend Developer</option>
+              <option>Project Manager</option>
+              <option>QA Engineer</option>
+              <option>DevOps Engineer</option>
+            </select>
+          </div>
+ 
+        </div>
+ 
+        <!-- Footer -->
+        <div class="flex items-center justify-end gap-2.5 px-6 py-4 bg-slate-50 border-t border-slate-100">
+          <button type="button" id="cancel-profile-btn"
+            class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 active:scale-95 transition-all duration-150">
+            Cancel
+          </button>
+          <button type="submit" id="save-profile-btn"
+            class="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium text-white bg-[#0F0C29] hover:bg-indigo-700 active:scale-95 rounded-xl shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Save changes
+          </button>
+        </div>
+      </form>
+ 
+    </div>
+  </div>
+        <!-- Toast -->
+  <div id="profile-toast"
+  class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-2 bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 z-50 whitespace-nowrap">
+  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="profile-toast-msg">Profile updated!</span>
+</div>
     </div>
   </nav>
   
@@ -128,7 +237,7 @@
       <button class="border px-5 py-2 rounded-full text-[#ff8f73]"><i class="fa-solid fa-pause pr-1"></i> Paused</button>
       <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
     </div>
-    <section class="">
+    <section class="flex items-center justify-center p-6">
       <div
       id="modal-backdrop"
       class="hidden fixed inset-0 bg-black/40 backdrop-blur-sm z-40 flex items-center justify-center p-4"
