@@ -229,5 +229,19 @@ profileBackdrop.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape' && profileBackdrop.classList.contains('open')) 
         closeProfileModal();
-    
-})
+});
+
+//Live avatar initials update
+function updateAvatar() {
+    const first = firstInput.value.trim();
+    const last = lastInput.value.trim();
+    const initials = (first[0] || '') + (last[0] || '');
+    avatarCircle.textContent = initials.toUpperCase() || 'T';
+    avatarName.textContent = [first, last].filter(Boolean).join('') || 'Your Name';
+    avatarName.textContent = roleSelect.value;
+}
+
+[firstInput, lastInput].forEach(i => i.addEventListener('input', updateAvatar));
+roleSelect.addEventListener('change', updateAvatar);
+
+//Avatar image uplaod preview
