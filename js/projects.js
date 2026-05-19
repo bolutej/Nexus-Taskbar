@@ -245,3 +245,18 @@ function updateAvatar() {
 roleSelect.addEventListener('change', updateAvatar);
 
 //Avatar image uplaod preview
+avatarUpload.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        avatarCircle.style.backgroundImage = `url(${ev.target.result})`;
+        avatarCircle.style.backgroundSize = 'cover';
+        avatarCircle.style.backgroundPosition = 'center';
+        avatarCircle.textContent = '';
+    }
+    reader.readAsDataURL(file);
+});
+
+//Email validation
+
