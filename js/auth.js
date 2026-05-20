@@ -9,7 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const actionCodeSettings = {
-  url: "http://localhost:5500/dashboard.html",
+  url: "http://localhost:5500/projects.html",
   handleCodeInApp: true,
 };
 
@@ -45,25 +45,26 @@ const provider = new GoogleAuthProvider();
 export async function signInWithGoogle() {
   try{
   const result = await signInWithPopup(auth, provider);
+  window.location.href = "projects.html";
   return result.user;
   } catch (error) {
-    console.error("Google sign-in error:", error.message);
+    switch (error.code) {
+      case "auth/popup-closed-by-user":
+        console.error("Popup closed before completing sign-in");
+        break;
+      case "auth/popup-blocked":
+        console.error("Popup was blocked by the browser");
+        break;
+      case "auth/cancelled-popup-request":
+        console.error("Another popup is already open");
+        break;
+      case "auth/network-request-failed":
+        console.error("Network error, check your connection");
+        break;
+      default:
+        console.error("Google sign-in error:", error.message);
+    }
     throw error;
   }
 }
-//  import { sendEmailLink } from "./js/auth.js";
-
-//       document.getElementById("sendBtn").addEventListener("click", async () => {
-//         const email = document.getElementById("email").value;
-//         await sendEmailLink(email);
-//         alert("Check your email for the sign-in link!");
-//       });
-
-//       import { signInWithGoogle } from "./js/auth.js";
-
-//       document
-//         .getElementById("googleBtn")
-//         .addEventListener("click", async () => {
-//           const user = await signInWithGoogle();
-//           window.location.href = "dashboard.html";
-//         });
+ 

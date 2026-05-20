@@ -1,3 +1,37 @@
+// Add these imports at the very top
+import { auth } from "../firebase.js";
+import {
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// Protect page + fill in user info
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // Fill in user info wherever you display it
+      const emailEl = document.getElementById("user-email");
+      const nameEl = document.getElementById("user-name");
+  
+      if (emailEl) emailEl.textContent = user.email;
+      if (nameEl) nameEl.textContent = user.displayName ?? user.email;
+  
+      // Hide loading, show content
+      const loading = document.getElementById("loading");
+      const content = document.getElementById("projects-content");
+      if (loading) loading.style.display = "none";
+      if (content) content.style.display = "block";
+  
+    } else {
+      // Not signed in — redirect
+      window.location.href = "auth.html";
+    }
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "auth.html";
+  });
+
 //Create Project Modal 
 const openBtn = document.getElementById('open-modal-btn');
 const closeBtn = document.getElementById('close-modal-btn');
@@ -260,3 +294,52 @@ avatarUpload.addEventListener('change', (e) => {
 
 //Email validation
 
+function isValidEmail(val) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+}
+emailInput.addEventListener('input', () => {
+    if (isValidEmail(emailInput.value)) {
+        emailError.classList.add('hidden');
+        emailInput.classList.remove('border-red-400');
+    }
+});
+
+
+//Form submit
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!isValidEmail(emailInput.value)) {
+        emailError.classList.remove('hidden');
+        emailInput.classList.add('border-red-400');
+        emailInput.focus();
+        return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner></span> Saving...';
+
+    setTimeout(() => {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Save changes`;
+        closeModal();
+        showToast('Profile updated successfully');
+    }, 900);
+});
+
+
+
+// Logout
+// async function logOut() {
+//     try {
+//       await signOut(auth);
+//       window.location.href = "auth.html";
+//     } catch (error) {
+//       console.error("Sign-out error:", error.message);
+//     }
+//   }
+  
+//   // Hook up logout button
+//   const logoutBtn = document.getElementById("logoutBtn");
+//   if (logoutBtn) logoutBtn.addEventListener("click", logOut);

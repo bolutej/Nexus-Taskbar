@@ -36,7 +36,13 @@ export async function logOut() {
     await signOut(auth);
     window.location.href = "auth.html";
   } catch (error) {
-    console.error("Sign-out error:", error.message);
+    switch (error.code) {
+      case "auth/network-request-failed":
+        console.error("Network error, could not sign out");
+        break;
+      default:
+        console.error("Sign-out error:", error.message);
+    }
     throw error;
   }
 }
