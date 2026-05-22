@@ -42,7 +42,7 @@ export async function completeSignIn() {
   } catch (error) {
     console.error("Sign-in error:", error.message);
     throw error;
-  }
+  } 
 }
 
 const provider = new GoogleAuthProvider();
