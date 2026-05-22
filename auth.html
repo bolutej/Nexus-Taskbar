@@ -58,19 +58,20 @@
         <div class="space-y-3.5 mb-6">
           <div>
             <label class="block text-xs font-semibold text-[#0F0C29] mb-2">Email address</label>
-            <input type="email" id="email" placeholder="you@example.com"
+            <input type="email" id="signup-email" placeholder="you@example.com"
               class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 text-[#0F0C29] placeholder-[#cbd5e1] focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 focus:bg-white transition" />
           </div>
         </div>
 
         <!-- Primary CTA -->
-        <button id="sendBtn"
-          class="w-full py-3 rounded-lg bg-[#0F0C29] from-cyan-600 to-cyan-500 text-white font-semibold transition hover:-translate-y-0.5 mb-3 active:translate-y-0">
-         
-            Get Started Free
-          
+        <button id="signup-sendBtn""
+          class=" w-full py-3 rounded-lg bg-[#0F0C29] from-cyan-600 to-cyan-500 text-white font-semibold transition
+          hover:-translate-y-0.5 mb-3 active:translate-y-0">
+
+          Get Started Free
+
         </button>
-        <p id="error-msg" style="color:red;"></p>
+        <p id="signup-error-msg" style="color:red;"></p>
         <!-- Divider -->
         <div class="relative mb-6 mt-3">
           <div class="absolute inset-0 flex items-center">
@@ -81,7 +82,7 @@
           </div>
         </div>
         <!-- Secondary Button -->
-        <button id="googleBtn"
+        <button id="signup-googleBtn"
           class="w-full py-3 rounded-lg border border-slate-200 bg-white text-[#1D1D1F] font-semibold hover:bg-slate-50 hover:border-slate-300 transition mb-6 flex items-center justify-center gap-2.5">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -141,17 +142,17 @@
         <div class="space-y-3.5 mb-6">
           <div>
             <label class="block text-xs font-semibold text-[#0F0C29] mb-2">Email address</label>
-            <input type="email" id="email" placeholder="you@example.com"
+            <input type="email" id="login-email" placeholder="you@example.com"
               class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50/50 text-[#0F0C29] placeholder-[#cbd5e1] focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 focus:bg-white transition" />
           </div>
         </div>
 
         <!-- Primary CTA -->
-        <button id="sendBtn"
+        <button id="login-sendBtn"
           class="w-full py-3 rounded-lg bg-[#0F0C29] from-cyan-600 to-cyan-500 text-white font-semibold transition hover:-translate-y-0.5 mb-3 active:translate-y-0">
           Log In
         </button>
-        <p id="error-msg" style="color:red;"></p>
+        <p id="login-error-msg" style="color:red;"></p>
         <div class="relative mb-6 mt-3">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-slate-200"></div>
@@ -161,7 +162,7 @@
           </div>
         </div>
         <!-- Secondary Button -->
-        <button id="googleBtn"
+        <button id="login-googleBtn"
           class="w-full py-3 rounded-lg border border-slate-200 bg-white text-[#0F0C29] font-semibold hover:bg-slate-50 hover:border-slate-300 transition mb-6 flex items-center justify-center gap-2.5">
           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
             <path
@@ -202,7 +203,17 @@
   <script src="js/ui.js"></script>
   <script type="module">
     import { sendEmailLink, signInWithGoogle } from "./js/auth.js";
-  
+
+    const param = new URLSearchParams(window.location.search);
+    if (param.get("reenter") === "true") {
+      const errorEl = document.getElementById("signup-error-msg");
+      if (errorEl) {
+        errorEl.style.color = "orange";
+        errorEl.textContent = "⚠️ Please enter your email again and click Send — open the link in this same browser.";
+        errorEl.classList.remove("hidden");
+      }
+    }
+
     // Signup panel
     document.getElementById("signup-sendBtn").addEventListener("click", async () => {
       const email = document.getElementById("signup-email").value;
@@ -218,7 +229,7 @@
         document.getElementById("signup-error-msg").textContent = "Error: " + error.message;
       }
     });
-  
+
     document.getElementById("signup-googleBtn").addEventListener("click", async () => {
       try {
         await signInWithGoogle();
@@ -226,7 +237,7 @@
         document.getElementById("signup-error-msg").textContent = "Google sign-in failed: " + error.message;
       }
     });
-  
+
     // Login panel
     document.getElementById("login-sendBtn").addEventListener("click", async () => {
       const email = document.getElementById("login-email").value;
@@ -242,7 +253,7 @@
         document.getElementById("login-error-msg").textContent = "Error: " + error.message;
       }
     });
-  
+
     document.getElementById("login-googleBtn").addEventListener("click", async () => {
       try {
         await signInWithGoogle();
@@ -250,6 +261,15 @@
         document.getElementById("login-error-msg").textContent = "Google sign-in failed: " + error.message;
       }
     });
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reenter") === "true") {
+      const errorEl = document.getElementById("signup-error-msg");
+      if (errorEl) {
+        errorEl.style.color = "orange";
+        errorEl.textContent = "Please enter your email again and click the link in the same browser.";
+      }
+    }
   </script>
 
 </body>

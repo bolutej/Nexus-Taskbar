@@ -9,7 +9,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const actionCodeSettings = {
-  url: "http://localhost:5500/projects.html",
+  url: "http://localhost:5502/projects.html",
   handleCodeInApp: true,
 };
 
@@ -25,15 +25,20 @@ export async function sendEmailLink(email) {
 
 export async function completeSignIn() {
   try {
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    let email = window.localStorage.getItem("emailForSignIn");
-    if (!email) {
-      email = window.prompt("Please enter your email:");
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      let email = window.localStorage.getItem("emailForSignIn");
+
+      // ✅ If no email in storage, redirect back to auth with a message
+      if (!email) {
+        window.location.href = "auth.html?reenter=true";
+        return;
+      }
+
+      const result = await signInWithEmailLink(auth, email, window.location.href);
+      window.localStorage.removeItem("emailForSignIn");
+      window.history.replaceState(null, "", window.location.pathname);
+      return result.user;
     }
-    const result = await signInWithEmailLink(auth, email, window.location.href);
-    window.localStorage.removeItem("emailForSignIn");
-    return result.user;
-  }
   } catch (error) {
     console.error("Sign-in error:", error.message);
     throw error;

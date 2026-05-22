@@ -1,37 +1,48 @@
-// Add these imports at the very top
 import { auth } from "../firebase.js";
 import {
   onAuthStateChanged,
   signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { completeSignIn } from "./auth.js";
 
-// Protect page + fill in user info
-onAuthStateChanged(auth, (user) => {
+// ✅ Run this first before checking auth state
+async function init() {
+
+  // Step 1 — complete email link sign-in if coming from email
+  await completeSignIn();
+
+  // Step 2 — now check auth state
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      // Fill in user info wherever you display it
       const emailEl = document.getElementById("user-email");
       const nameEl = document.getElementById("user-name");
-  
+
       if (emailEl) emailEl.textContent = user.email;
       if (nameEl) nameEl.textContent = user.displayName ?? user.email;
-  
-      // Hide loading, show content
+
       const loading = document.getElementById("loading");
       const content = document.getElementById("projects-content");
       if (loading) loading.style.display = "none";
       if (content) content.style.display = "block";
-  
+
     } else {
-      // Not signed in — redirect
       window.location.href = "auth.html";
     }
   });
 
+  // Step 3 — logout button
   document.getElementById("logout-btn").addEventListener("click", async () => {
-    await signOut(auth);
-    window.location.href = "auth.html";
+    try {
+      await signOut(auth);
+      window.location.href = "auth.html";
+    } catch (error) {
+      console.error("Sign-out error:", error.message);
+    }
   });
+}
 
+// ✅ Start everything
+init();
 //Create Project Modal 
 const openBtn = document.getElementById('open-modal-btn');
 const closeBtn = document.getElementById('close-modal-btn');
