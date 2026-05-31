@@ -1,48 +1,36 @@
-import { auth } from "../firebase.js";
-import {
-  onAuthStateChanged,
-  signOut,
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { completeSignIn } from "./auth.js";
+// js/projects.js
+import { supabase } from '../supabase.js';
 
-// ✅ Run this first before checking auth state
-async function init() {
+// ✅ Protect page and fill in user info
+supabase.auth.onAuthStateChange((event, session) => {
+  if (session?.user) {
+    const user = session.user;
+    const nameEl = document.getElementById('user-name');
+    const emailEl = document.getElementById('user-email');
 
-  // Step 1 — complete email link sign-in if coming from email
-  await completeSignIn();
+    if (emailEl) emailEl.textContent = user.email;
+    if (nameEl) nameEl.textContent = user.user_metadata?.full_name ?? user.email;
 
-  // Step 2 — now check auth state
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      const emailEl = document.getElementById("user-email");
-      const nameEl = document.getElementById("user-name");
+    const loading = document.getElementById('loading');
+    const content = document.getElementById('projects-content');
+    if (loading) loading.style.display = 'none';
+    if (content) content.style.display = 'block';
 
-      if (emailEl) emailEl.textContent = user.email;
-      if (nameEl) nameEl.textContent = user.displayName ?? user.email;
+  } else {
+    window.location.href = 'auth.html';
+  }
+});
 
-      const loading = document.getElementById("loading");
-      const content = document.getElementById("projects-content");
-      if (loading) loading.style.display = "none";
-      if (content) content.style.display = "block";
+// ✅ Logout button
+import { logOut } from './auth.js';
 
-    } else {
-      window.location.href = "auth.html";
-    }
-  });
-
-  // Step 3 — logout button
-  document.getElementById("logout-btn").addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      window.location.href = "auth.html";
-    } catch (error) {
-      console.error("Sign-out error:", error.message);
-    }
-  });
-}
-
-// ✅ Start everything
-init();
+document.getElementById('logout-btn')?.addEventListener('click', async () => {
+  try {
+    await logOut();
+  } catch (error) {
+    console.error('Logout failed:', error.message);
+  }
+});
 //Create Project Modal 
 const openBtn = document.getElementById('open-modal-btn');
 const closeBtn = document.getElementById('close-modal-btn');

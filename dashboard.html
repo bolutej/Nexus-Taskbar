@@ -10,7 +10,37 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link href="./src/output.css" rel="stylesheet" />
+    <link href="./src/output.css" rel="stylesheet"/>
+    <style>
+      body { font-family: 'Inter', sans-serif; }
+      /* Only keeping styles that can't be done in Tailwind */
+      .tab.active { border-bottom: 2px solid #0F0C29; color: #0F0C29; }
+      .column-body.drag-over { background: #eef2ff !important; border-color: #818cf8 !important; }
+      .task-card.dragging { opacity: 0.5; cursor: grabbing; }
+      .task-card:hover { transform: translateY(-1px); }
+      .tag-option { opacity: 0.4; }
+      .tag-option.selected { opacity: 1; border: 1px solid currentColor; }
+      .modal-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+      .modal-backdrop.open { opacity: 1; pointer-events: all; }
+      .modal { transform: scale(0.95) translateY(10px); transition: transform 0.22s; }
+      .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
+      .toast { transform: translateX(-50%) translateY(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; }
+      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .tag-frontend { background: #ede9fe; color: #5b21b6; }
+      .tag-design { background: #fce7f3; color: #9d174d; }
+      .tag-backend { background: #d1fae5; color: #065f46; }
+      .tag-bug { background: #fee2e2; color: #991b1b; }
+      .tag-feature { background: #dbeafe; color: #1e40af; }
+      .tag-docs { background: #fef9c3; color: #854d0e; }
+      .task-id-icon.done { background: #d1fae5; color: #065f46; }
+      .task-id-icon.todo { background: #f4f5f7; color: #5e6c84; }
+      .task-id-icon.progress { background: #dbeafe; color: #1e40af; }
+      .priority-high { color: #ef4444; }
+      .priority-medium { color: #f59e0b; }
+      .priority-low { color: #10b981; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
+    </style>
   </head>
   <body
     class="min-h-screen bg-[#f6f7fb] bg-[radial-gradient(900px_600px_at_0%_0%,#e9f2ff_0%,transparent_60%),radial-gradient(900px_600px_at_100%_0%,#eef0f7_0%,transparent_55%),linear-gradient(180deg,#f6f7fb_0%,#eceff5_100%)] bg-fixed font-['Inter'] text-[14px] text-[#172b4d] antialiased"
@@ -68,7 +98,7 @@
       </div>
 
       <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
-        <button
+        <!-- <button
           class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#0F0C29] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px]"
           id="createBtn"
           type="button"
@@ -86,7 +116,7 @@
             <path d="M12 5v14M5 12h14" />
           </svg>
           Create
-        </button>
+        </button> -->
         <button
           class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
           type="button"
@@ -217,7 +247,7 @@
           >
             <path d="M12 5v14M5 12h14" />
           </svg>
-          Add issue
+          Add Task
         </button>
         <button
           class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
@@ -264,23 +294,58 @@
         </button>
       </div>
     </header>
+    <section id="board" class="flex gap-4 px-6 pt-4 pb-8 overflow-x-auto min-h-[calc(100vh-160px)] items-start">
 
-    <section
-      class="grid grid-cols-3 gap-[0.85rem] px-6 pb-10 pt-4 max-[960px]:mx-[0.6rem] max-[960px]:grid-cols-1 max-[960px]:p-[0.6rem]"
-      id="board"
-      aria-label="Kanban board"
-    ></section>
+      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+        <div class="flex items-center justify-between px-3 py-2.5 ">
+          <div class="flex items-center gap-2">
+            <!-- <div class="w-2 h-2 rounded-full bg-slate-400"></div> -->
+            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Backlog</span>
+            <span id="count-backlog" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+          </div>
+          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="backlog">+</button>
+        </div>
+        <div id="body-backlog" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="backlog"></div>
+      </div>
 
+      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+        <div class="flex items-center justify-between px-3 py-2.5">
+          <div class="flex items-center gap-2">
+            <!-- <div class="w-2 h-2 rounded-full bg-indigo-400"></div> -->
+            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">In Progress</span>
+            <span id="count-inprogress" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+          </div>
+          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="inprogress">+</button>
+        </div>
+        <div id="body-inprogress" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="inprogress"></div>
+      </div>
+
+      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+        <div class="flex items-center justify-between px-3 py-2.5 ">
+          <div class="flex items-center gap-2">
+            <!-- <div class="w-2 h-2 rounded-full bg-emerald-400"></div> -->
+            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Done</span>
+            <span id="count-done" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+          </div>
+          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="done">+</button>
+        </div>
+        <div id="body-done" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="done"></div>
+      </div>
+
+    </section>
+    
+    <!-- modal backdrop -->
     <div
-      class="fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
-      id="modal"
+      class=" modal-backdrop fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
+      id="modal-backdrop"
       aria-hidden="true"
       role="dialog"
       aria-modal="true"
     >
       <div class="fixed inset-0 bg-[rgba(9,30,66,0.55)] backdrop-blur-[4px]" data-close></div>
       <div
-        class="relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
+        class="modal relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
+        id="modal"
         role="document"
       >
         <header class="flex items-center justify-between border-b border-[#dfe1e6] px-5 py-[0.85rem] pr-4">
@@ -298,6 +363,7 @@
           </div>
           <button
             class="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d]"
+            id="modal-close"
             type="button"
             aria-label="Close"
             data-close
@@ -321,7 +387,7 @@
           <div class="min-w-0">
             <input
               class="-mx-[0.55rem] mb-3 w-[calc(100%+1.1rem)] rounded-[6px] border border-transparent bg-transparent px-[0.55rem] py-[0.4rem] text-[1.4rem] font-bold tracking-[-0.015em] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#f4f5f7] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-              id="modalTitle"
+              id="task-title-input"
               type="text"
               placeholder="Issue title"
             />
@@ -348,7 +414,7 @@
               <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Status</span>
               <select
                 class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="modalStatus"
+                id="task-col-select"
               ></select>
             </div>
 
@@ -356,7 +422,7 @@
               <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Priority</span>
               <select
                 class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="modalPriority"
+                id="task-priority-select"
               >
                 <option value="highest">&uarr;&uarr; Highest</option>
                 <option value="high">&uarr; High</option>
@@ -380,7 +446,7 @@
 
             <div class="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-2 border-b border-[#dfe1e6] py-2">
               <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Labels</span>
-              <div class="label-picker flex flex-wrap gap-[0.3rem]" id="modalLabels"></div>
+              <div class="label-picker flex flex-wrap gap-[0.3rem]" id="tag-selector"></div>
             </div>
 
             <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
@@ -406,7 +472,7 @@
           <button
             class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
             type="button"
-            id="modalDelete"
+            id="modal-delete"
           >
             Delete
           </button>
@@ -421,34 +487,11 @@
       </div>
     </div>
 
-    <template id="cardTemplate">
-      <article
-        class="card relative cursor-pointer rounded-[8px] bg-white px-[0.85rem] pb-[0.6rem] pt-[0.7rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] transition-all duration-150 ease-in-out hover:bg-[#fafbfc] hover:shadow-[0_1px_2px_rgba(9,30,66,0.06)] active:cursor-grabbing [&.is-dragging]:rotate-[1deg] [&.is-dragging]:opacity-50"
-        draggable="true"
-      >
-        <div class="card-labels mb-[0.4rem] flex flex-wrap gap-[0.3rem] [&:empty]:hidden"></div>
-        <h3 class="card-title m-0 text-[0.88rem] font-medium leading-[1.4] text-[#172b4d]"></h3>
-        <div class="mt-[0.6rem] flex items-center justify-between gap-2">
-          <span class="inline-flex items-center gap-[0.4rem]">
-            <span
-              class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
-            ></span>
-            <span class="card-key text-[0.74rem] font-medium tracking-[0.02em] text-[#5e6c84]"></span>
-          </span>
-          <span class="inline-flex items-center gap-[0.4rem]">
-            <span
-              class="priority-icon inline-flex h-4 w-4 items-center justify-center text-[0.78rem] font-extrabold leading-none data-[priority=highest]:text-[#cd1316] data-[priority=high]:text-[#de350b] data-[priority=medium]:text-[#ff991f] data-[priority=low]:text-[#2684ff] data-[priority=lowest]:text-[#6554c0]"
-            ></span>
-            <span
-              class="member card-assignee ml-0 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-            >
-              T
-            </span>
-          </span>
-        </div>
-      </article>
-    </template>
+    <div id="toast" class="toast fixed bottom-6 left-1/2 bg-[#172b4d] text-white text-[0.82rem] font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 z-[100] whitespace-nowrap shadow-lg">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span id="toast-msg">Task created!</span>
+    </div>
 
-    <script src="dashboard.js"></script>
+    <script src="./js/dashboard.js" type="module"></script>
   </body>
 </html>
