@@ -1,497 +1,654 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nexus &mdash; NEX board</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link href="./src/output.css" rel="stylesheet"/>
-    <style>
-      body { font-family: 'Inter', sans-serif; }
-      /* Only keeping styles that can't be done in Tailwind */
-      .tab.active { border-bottom: 2px solid #0F0C29; color: #0F0C29; }
-      .column-body.drag-over { background: #eef2ff !important; border-color: #818cf8 !important; }
-      .task-card.dragging { opacity: 0.5; cursor: grabbing; }
-      .task-card:hover { transform: translateY(-1px); }
-      .tag-option { opacity: 0.4; }
-      .tag-option.selected { opacity: 1; border: 1px solid currentColor; }
-      .modal-backdrop { opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-      .modal-backdrop.open { opacity: 1; pointer-events: all; }
-      .modal { transform: scale(0.95) translateY(10px); transition: transform 0.22s; }
-      .modal-backdrop.open .modal { transform: scale(1) translateY(0); }
-      .toast { transform: translateX(-50%) translateY(8px); opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s; }
-      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-      .tag-frontend { background: #ede9fe; color: #5b21b6; }
-      .tag-design { background: #fce7f3; color: #9d174d; }
-      .tag-backend { background: #d1fae5; color: #065f46; }
-      .tag-bug { background: #fee2e2; color: #991b1b; }
-      .tag-feature { background: #dbeafe; color: #1e40af; }
-      .tag-docs { background: #fef9c3; color: #854d0e; }
-      .task-id-icon.done { background: #d1fae5; color: #065f46; }
-      .task-id-icon.todo { background: #f4f5f7; color: #5e6c84; }
-      .task-id-icon.progress { background: #dbeafe; color: #1e40af; }
-      .priority-high { color: #ef4444; }
-      .priority-medium { color: #f59e0b; }
-      .priority-low { color: #10b981; }
-      @keyframes spin { to { transform: rotate(360deg); } }
-      .spinner { display: inline-block; width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; }
-    </style>
-  </head>
-  <body
-    class="min-h-screen bg-[#f6f7fb] bg-[radial-gradient(900px_600px_at_0%_0%,#e9f2ff_0%,transparent_60%),radial-gradient(900px_600px_at_100%_0%,#eef0f7_0%,transparent_55%),linear-gradient(180deg,#f6f7fb_0%,#eceff5_100%)] bg-fixed font-['Inter'] text-[14px] text-[#172b4d] antialiased"
-  >
-    <nav
-      class="mx-6 mt-4 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-[16px] bg-white px-[1.1rem] py-2 pr-[0.6rem] shadow-[0_4px_12px_rgba(9,30,66,0.1)] max-[960px]:m-[0.6rem] max-[960px]:grid-cols-[auto_auto] max-[960px]:gap-[0.6rem]"
-    >
-      <div class="inline-flex min-w-0 items-center gap-[0.55rem] pr-2">
-        <a
-        href="index.html"
-        class="inline-flex items-center rounded-2xl px-1 py-1 transition hover:opacity-90"
-        aria-label="Nexus home"
-      >
-        <img
-          src="img/nexus_logoo.png"
-          alt="Nexus logo"
-          class="h-auto w-[8.5rem] object-contain sm:w-[13rem] lg:w-[11.5rem]"
-        />
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexus &mdash; NEX board</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="./src/output.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Only keeping styles that can't be done in Tailwind */
+    .tab.active {
+      border-bottom: 2px solid #0F0C29;
+      color: #0F0C29;
+    }
+
+    .column-body.drag-over {
+      background: #eef2ff !important;
+      border-color: #818cf8 !important;
+    }
+
+    .task-card.dragging {
+      opacity: 0.5;
+      cursor: grabbing;
+    }
+
+    .task-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .tag-option {
+      opacity: 0.4;
+    }
+
+    .tag-option.selected {
+      opacity: 1;
+      border: 1px solid currentColor;
+    }
+
+    .modal-backdrop {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.22s;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .toast {
+      transform: translateX(-50%) translateY(8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .tag-frontend {
+      background: #ede9fe;
+      color: #5b21b6;
+    }
+
+    .tag-design {
+      background: #fce7f3;
+      color: #9d174d;
+    }
+
+    .tag-backend {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .tag-bug {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .tag-feature {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .tag-docs {
+      background: #fef9c3;
+      color: #854d0e;
+    }
+
+    .task-id-icon.done {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .task-id-icon.todo {
+      background: #f4f5f7;
+      color: #5e6c84;
+    }
+
+    .task-id-icon.progress {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .priority-high {
+      color: #ef4444;
+    }
+
+    .priority-medium {
+      color: #f59e0b;
+    }
+
+    .priority-low {
+      color: #10b981;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 13px;
+      height: 13px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* Profile backdrop */
+    #profile-backdrop {
+      opacity: 0;
+      transition: opacity 200ms ease;
+    }
+
+    #profile-backdrop.open {
+      opacity: 1;
+    }
+
+    #profile-panel {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    #profile-panel.open {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    input:focus,
+    select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+  </style>
+</head>
+
+<body
+  class="min-h-screen bg-[#f6f7fb] bg-[radial-gradient(900px_600px_at_0%_0%,#e9f2ff_0%,transparent_60%),radial-gradient(900px_600px_at_100%_0%,#eef0f7_0%,transparent_55%),linear-gradient(180deg,#f6f7fb_0%,#eceff5_100%)] bg-fixed font-['Inter'] text-[14px] text-[#172b4d] antialiased">
+  <nav
+    class="mx-6 mt-4 grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-5 rounded-[16px] bg-white px-[1.1rem] py-2 pr-[0.6rem] shadow-[0_4px_12px_rgba(9,30,66,0.1)] max-[960px]:m-[0.6rem] max-[960px]:grid-cols-[auto_auto] max-[960px]:gap-[0.6rem]">
+    <div class="inline-flex min-w-0 items-center gap-[0.55rem] pr-2">
+      <a href="index.html" class="inline-flex items-center rounded-2xl px-1 py-1 transition hover:opacity-90"
+        aria-label="Nexus home">
+        <img src="img/nexus_logoo.png" alt="Nexus logo"
+          class="h-auto w-[8.5rem] object-contain sm:w-[13rem] lg:w-[11.5rem]" />
       </a>
-        <span
-          class="mx-[0.4rem] h-[22px] w-px bg-[#dfe1e6] max-[960px]:hidden"
-          aria-hidden="true"
-        ></span>
-        <span
-          class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.86rem] max-[960px]:hidden"
-        >
-          <span class="mr-1 text-[#97a0af]">Projects /</span>
-          <span class="font-medium text-[#5e6c84]">NEX board</span>
-        </span>
-      </div>
+      <span class="mx-[0.4rem] h-[22px] w-px bg-[#dfe1e6] max-[960px]:hidden" aria-hidden="true"></span>
+      <span class="overflow-hidden text-ellipsis whitespace-nowrap text-[0.86rem] max-[960px]:hidden">
+        <span class="mr-1 text-[#97a0af]">Projects /</span>
+        <span class="font-medium text-[#5e6c84]">NEX board</span>
+      </span>
+    </div>
 
-      <div
-        class="relative flex h-[38px] items-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-4 pl-[2.4rem] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus-within:border-[#1868db] focus-within:bg-white focus-within:ring-2 focus-within:ring-[rgba(24,104,219,0.18)] max-[960px]:order-3 max-[960px]:col-[1/-1] max-[960px]:h-9"
-      >
-        <svg
-          class="absolute left-[0.85rem] text-[#97a0af]"
-          viewBox="0 0 24 24"
-          width="18"
-          height="18"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="11" cy="11" r="7" />
-          <path d="m20 20-3.5-3.5" />
-        </svg>
-        <input
-          type="search"
-          class="h-full w-full border-0 bg-transparent text-[0.88rem] text-[#172b4d] outline-none placeholder:text-[#97a0af]"
-          placeholder="Search issues, projects, people..."
-          aria-label="Search"
-        />
-      </div>
-
-      <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
-        <!-- <button
-          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#0F0C29] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6] max-[960px]:h-[34px]"
-          id="createBtn"
-          type="button"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Create
-        </button> -->
-        <button
-          class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
-          type="button"
-          aria-label="Notifications"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-          </svg>
-        </button>
-        <button
-          class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
-          type="button"
-          aria-label="Help"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="12" cy="12" r="9" />
-            <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4" />
-            <path d="M12 17h.01" />
-          </svg>
-        </button>
-        <div
-          class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
-          aria-label="Account"
-        >
-          T
-        </div>
-      </div>
-    </nav>
-
-    <header
-      class="mx-6 mt-4 flex flex-wrap items-center justify-between gap-5 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem]"
-    >
-      <div class="min-w-0">
-        <p class="mb-1 text-[0.7rem] font-semibold tracking-[0.12em] text-[#1868db]">
-          SPRINT 12 &middot; NEX BOARD
-        </p>
-        <h1 class="m-0 text-[1.4rem] font-bold tracking-[-0.018em] text-[#0F0C29]">
-          Product Design Sprint
-        </h1>
-        <p class="mt-[0.3rem] text-[0.84rem] text-[#5e6c84]">
-          <span id="taskSummary">&mdash; in progress</span> &middot; Last updated
-          <span id="lastUpdated">just now</span>
-        </p>
-      </div>
-
-      <div class="inline-flex flex-wrap items-center gap-[0.4rem]">
-        <button
-          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
-          type="button"
-        >
-          <span class="mr-[0.15rem] inline-flex" aria-hidden="true">
-            <span
-              class="member inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-            >
-              T
-            </span>
-            <span
-              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FFC400] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-            >
-              A
-            </span>
-            <span
-              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#36B37E] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-            >
-              M
-            </span>
-            <span
-              class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#6554C0] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-            >
-              K
-            </span>
-          </span>
-          4 members
-        </button>
-        <button
-          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
-          type="button"
-        >
-          <svg
-            class="text-[#5e6c84]"
-            viewBox="0 0 24 24"
-            width="15"
-            height="15"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M3 5h18l-7 9v6l-4-2v-4L3 5z" />
-          </svg>
-          Filter
-        </button>
-        <button
-          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
-          type="button"
-          id="addTaskBtn"
-        >
-          <svg
-            class="text-[#5e6c84]"
-            viewBox="0 0 24 24"
-            width="15"
-            height="15"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M12 5v14M5 12h14" />
-          </svg>
-          Add Task
-        </button>
-        <button
-          class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
-          type="button"
-        >
-          <svg
-            class="text-[#5e6c84]"
-            viewBox="0 0 24 24"
-            width="15"
-            height="15"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="18" cy="5" r="3" />
-            <circle cx="6" cy="12" r="3" />
-            <circle cx="18" cy="19" r="3" />
-            <path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5" />
-          </svg>
-          Share
-        </button>
-        <button
-          class="inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-0 text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
-          type="button"
-          aria-label="More"
-        >
-          <svg
-            class="text-[#5e6c84]"
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2.4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="5" cy="12" r="1.2" />
-            <circle cx="12" cy="12" r="1.2" />
-            <circle cx="19" cy="12" r="1.2" />
-          </svg>
-        </button>
-      </div>
-    </header>
-    <section id="board" class="flex gap-4 px-6 pt-4 pb-8 overflow-x-auto min-h-[calc(100vh-160px)] items-start">
-
-      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
-        <div class="flex items-center justify-between px-3 py-2.5 ">
-          <div class="flex items-center gap-2">
-            <!-- <div class="w-2 h-2 rounded-full bg-slate-400"></div> -->
-            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Backlog</span>
-            <span id="count-backlog" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
-          </div>
-          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="backlog">+</button>
-        </div>
-        <div id="body-backlog" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="backlog"></div>
-      </div>
-
-      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
-        <div class="flex items-center justify-between px-3 py-2.5">
-          <div class="flex items-center gap-2">
-            <!-- <div class="w-2 h-2 rounded-full bg-indigo-400"></div> -->
-            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">In Progress</span>
-            <span id="count-inprogress" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
-          </div>
-          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="inprogress">+</button>
-        </div>
-        <div id="body-inprogress" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="inprogress"></div>
-      </div>
-
-      <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
-        <div class="flex items-center justify-between px-3 py-2.5 ">
-          <div class="flex items-center gap-2">
-            <!-- <div class="w-2 h-2 rounded-full bg-emerald-400"></div> -->
-            <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Done</span>
-            <span id="count-done" class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
-          </div>
-          <button class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors" data-col="done">+</button>
-        </div>
-        <div id="body-done" class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2" data-col="done"></div>
-      </div>
-
-    </section>
-    
-    <!-- modal backdrop -->
     <div
-      class=" modal-backdrop fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
-      id="modal-backdrop"
-      aria-hidden="true"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div class="fixed inset-0 bg-[rgba(9,30,66,0.55)] backdrop-blur-[4px]" data-close></div>
-      <div
-        class="modal relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
-        id="modal"
-        role="document"
-      >
-        <header class="flex items-center justify-between border-b border-[#dfe1e6] px-5 py-[0.85rem] pr-4">
-          <div class="inline-flex items-center gap-2">
-            <span
-              class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
-              id="modalTypeIcon"
-            ></span>
-            <span
-              class="text-[0.84rem] font-semibold tracking-[0.02em] text-[#5e6c84]"
-              id="modalKey"
-            >
-              NEX-0
-            </span>
+      class="relative flex h-[38px] items-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-4 pl-[2.4rem] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus-within:border-[#1868db] focus-within:bg-white focus-within:ring-2 focus-within:ring-[rgba(24,104,219,0.18)] max-[960px]:order-3 max-[960px]:col-[1/-1] max-[960px]:h-9">
+      <svg class="absolute left-[0.85rem] text-[#97a0af]" viewBox="0 0 24 24" width="18" height="18" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input type="search"
+        class="h-full w-full border-0 bg-transparent text-[0.88rem] text-[#172b4d] outline-none placeholder:text-[#97a0af]"
+        placeholder="Search issues, projects, people..." aria-label="Search" />
+    </div>
+
+    <div class="inline-flex items-center gap-[0.4rem] max-[960px]:gap-[0.3rem]">
+      <button
+        class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
+        type="button" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+          <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </svg>
+      </button>
+      <button
+        class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
+        type="button" aria-label="Help">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9.1 9a3 3 0 1 1 5.8 1c0 2-3 2-3 4" />
+          <path d="M12 17h.01" />
+        </svg>
+      </button>
+      <div 
+        id="open-profile-btn"
+        class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
+        aria-label="Account">
+        T
+      </div>
+    </div>
+
+
+    <!--profile modal  -->
+    <div id="profile-backdrop" class="hidden fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+
+      <!-- Panel -->
+      <div id="profile-panel" role="dialog" aria-modal="true" aria-labelledby="profile-title"
+        class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+
+        <!-- Header -->
+        <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+          <div>
+            <h2 id="profile-title" class="text-[17px] font-semibold text-[#0F0C29]">Profile</h2>
+            <p class="text-sm text-slate-400 mt-0.5">Manage your personal info</p>
           </div>
-          <button
-            class="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d]"
-            id="modal-close"
-            type="button"
-            aria-label="Close"
-            data-close
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="18"
-              height="18"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18M6 6l12 12" />
+          <button id="close-profile-btn" aria-label="Close"
+            class="text-slate-400 hover:text-slate-600 hover:bg-slate-100 p-1.5 rounded-lg transition-colors -mt-0.5 -mr-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
-        </header>
+        </div>
 
-        <div class="grid grid-cols-[1.6fr_minmax(0,1fr)] gap-6 overflow-y-auto px-6 py-5 max-[960px]:grid-cols-1 max-[960px]:gap-4 max-[960px]:p-4">
-          <div class="min-w-0">
-            <input
-              class="-mx-[0.55rem] mb-3 w-[calc(100%+1.1rem)] rounded-[6px] border border-transparent bg-transparent px-[0.55rem] py-[0.4rem] text-[1.4rem] font-bold tracking-[-0.015em] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#f4f5f7] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-              id="task-title-input"
-              type="text"
-              placeholder="Issue title"
-            />
-
-            <section class="mt-4">
-              <p class="mb-[0.4rem] text-[0.72rem] font-bold uppercase tracking-[0.06em] text-[#5e6c84]">
-                Description
-              </p>
-              <textarea
-                class="min-h-[90px] w-full resize-y rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.8rem] py-[0.7rem] text-[0.92rem] leading-[1.55] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="modalDesc"
-                rows="5"
-                placeholder="Add a description..."
-              ></textarea>
-            </section>
+        <!-- Avatar section -->
+        <div class="flex items-center gap-4 px-6 py-5 border-b border-slate-100">
+          <div id="avatar-circle"
+            class="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-semibold text-white flex-shrink-0"
+            style="background: linear-gradient(135deg, #ff8f73, #ff5630);">
+            T
           </div>
+          <div>
+            <p id="avatar-name" class="text-[15px] font-semibold text-[#0F0C29]">Tolu Adeyemi</p>
+            <p id="avatar-role" class="text-sm text-slate-400 mt-0.5 mb-3">Product Designer</p>
+            <label
+              class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg cursor-pointer transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Change photo
+              <input type="file" accept="image/*" class="hidden" id="avatar-upload" />
+            </label>
+          </div>
+        </div>
 
-          <aside class="self-start rounded-[8px] border border-[#dfe1e6] bg-[#fafbfc] px-4 pb-4 pt-[0.85rem]">
-            <p class="mb-[0.65rem] text-[0.7rem] font-bold uppercase tracking-[0.08em] text-[#5e6c84]">
-              Details
-            </p>
+        <!-- Form fields -->
+        <form id="profile-form" novalidate>
+          <div class="px-6 py-5 flex flex-col gap-4">
 
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Status</span>
-              <select
-                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="task-col-select"
-              ></select>
-            </div>
-
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Priority</span>
-              <select
-                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="task-priority-select"
-              >
-                <option value="highest">&uarr;&uarr; Highest</option>
-                <option value="high">&uarr; High</option>
-                <option value="medium">= Medium</option>
-                <option value="low">&darr; Low</option>
-                <option value="lowest">&darr;&darr; Lowest</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Type</span>
-              <select
-                class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-                id="modalType"
-              >
-                <option value="task">Task</option>
-                <option value="story">Story</option>
-                <option value="bug">Bug</option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-2 border-b border-[#dfe1e6] py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Labels</span>
-              <div class="label-picker flex flex-wrap gap-[0.3rem]" id="tag-selector"></div>
-            </div>
-
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Assignee</span>
-              <div class="inline-flex items-center gap-[0.4rem]">
-                <span
-                  class="member m-0 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]"
-                >
-                  T
-                </span>
-                <span class="text-[0.84rem] text-[#172b4d]">You</span>
+            <!-- First & Last name -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex flex-col gap-1.5">
+                <label for="first-name" class="text-xs font-medium text-slate-500">First name</label>
+                <input id="first-name" type="text" value="Tolu"
+                  class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors" />
+              </div>
+              <div class="flex flex-col gap-1.5">
+                <label for="last-name" class="text-xs font-medium text-slate-500">Last name</label>
+                <input id="last-name" type="text" value="Adeyemi"
+                  class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors" />
               </div>
             </div>
 
-            <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 py-2">
-              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Created</span>
-              <span class="text-[0.82rem] text-[#172b4d]" id="modalCreated">&mdash;</span>
+            <!-- Email -->
+            <div class="flex flex-col gap-1.5">
+              <label for="profile-email" class="text-xs font-medium text-slate-500">Email address</label>
+              <input type="email" value="tolu@nexus.io" disabled
+                class="h-9 px-3 text-sm text-slate-400 bg-slate-100 border border-slate-200 rounded-lg cursor-not-allowed" />
+              <p id="email-error" class="text-xs text-red-500 hidden">Please enter a valid email.</p>
             </div>
-          </aside>
-        </div>
 
-        <footer class="flex justify-between gap-2 border-t border-[#dfe1e6] bg-[#fafbfc] px-5 py-[0.85rem]">
-          <button
-            class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
-            type="button"
-            id="modal-delete"
-          >
-            Delete
-          </button>
-          <button
-            class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6]"
-            type="button"
-            data-close
-          >
-            Done
-          </button>
-        </footer>
+            <!-- Role -->
+            <div class="flex flex-col gap-1.5">
+              <label for="profile-role" class="text-xs font-medium text-slate-500">Role</label>
+              <select id="profile-role"
+                class="h-9 px-3 text-sm text-slate-900 bg-slate-50 border border-slate-200 rounded-lg focus:border-indigo-400 focus:bg-white transition-colors">
+                <option>Product Designer</option>
+                <option>Frontend Developer</option>
+                <option>Backend Developer</option>
+                <option>Project Manager</option>
+                <option>QA Engineer</option>
+                <option>DevOps Engineer</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Footer -->
+          <div class="flex items-center justify-end gap-2.5 px-6 py-4 bg-slate-50 border-t border-slate-100">
+            <button type="button" id="logout-btn"
+              class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-xl active:scale-95 transition-all duration-150 mr-15">
+              Logout
+            </button>
+            <button type="button" id="cancel-profile-btn"
+              class="px-4 py-2 text-sm font-medium text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 active:scale-95 transition-all duration-150">
+              Cancel
+            </button>
+            <button type="submit" id="save-profile-btn"
+              class="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium text-white bg-[#0F0C29] hover:bg-indigo-700 active:scale-95 rounded-xl shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Save changes
+            </button>
+          </div>
+        </form>
+
       </div>
     </div>
+    <!-- Toast -->
+    <div id="profile-toast"
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-2 bg-slate-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 z-50 whitespace-nowrap">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6ee7b7"
+        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+      <span id="profile-toast-msg">Profile updated!</span>
+    </div>
+    </div>
+  </nav>
 
-    <div id="toast" class="toast fixed bottom-6 left-1/2 bg-[#172b4d] text-white text-[0.82rem] font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 z-[100] whitespace-nowrap shadow-lg">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      <span id="toast-msg">Task created!</span>
+  <header
+    class="mx-6 mt-4 flex flex-wrap items-center justify-between gap-5 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem]">
+    <div class="min-w-0">
+      <p class="mb-1 text-[0.7rem] font-semibold tracking-[0.12em] text-[#1868db]" id="project-name">
+        SPRINT 12 &middot; NEX BOARD
+      </p>
+      <h1 class="m-0 text-[1.4rem] font-bold tracking-[-0.018em] text-[#0F0C29]" id="board-title">
+        Product Design Sprint
+      </h1>
+      <p class="mt-[0.3rem] text-[0.84rem] text-[#5e6c84]">
+        <span id="task-count">0 task</span>
+      </p>
     </div>
 
-    <script src="./js/dashboard.js" type="module"></script>
-  </body>
+    <div class="inline-flex flex-wrap items-center gap-[0.4rem]">
+      <button
+        class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+        type="button">
+        <span class="mr-[0.15rem] inline-flex" aria-hidden="true">
+          <span
+            class="member inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]">
+            T
+          </span>
+          <span
+            class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FFC400] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]">
+            A
+          </span>
+          <span
+            class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#36B37E] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]">
+            M
+          </span>
+          <span
+            class="member -ml-[7px] inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#6554C0] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]">
+            K
+          </span>
+        </span>
+        4 members
+      </button>
+      <button
+        class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+        type="button">
+        <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 5h18l-7 9v6l-4-2v-4L3 5z" />
+        </svg>
+        Filter
+      </button>
+      <button
+        class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+        type="button">
+        <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+          stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Add Task
+      </button>
+      <button
+        class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+        type="button">
+        <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <path d="M8.6 13.5 15.4 17.5M15.4 6.5 8.6 10.5" />
+        </svg>
+        Share
+      </button>
+      <button
+        class="inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-0 text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
+        type="button" aria-label="More">
+        <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+          stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="5" cy="12" r="1.2" />
+          <circle cx="12" cy="12" r="1.2" />
+          <circle cx="19" cy="12" r="1.2" />
+        </svg>
+      </button>
+    </div>
+  </header>
+  <section id="board" class="flex gap-4 px-6 pt-4 pb-8 overflow-x-auto min-h-[calc(100vh-160px)] items-start">
+
+    <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+      <div class="flex items-center justify-between px-3 py-2.5 ">
+        <div class="flex items-center gap-2">
+          <!-- <div class="w-2 h-2 rounded-full bg-slate-400"></div> -->
+          <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Backlog</span>
+          <span id="count-backlog"
+            class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+        </div>
+        <button
+          class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors"
+          data-col="backlog" id="add-task-btn">+</button>
+      </div>
+      <div id="body-backlog"
+        class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2"
+        data-col="backlog"></div>
+    </div>
+
+    <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+      <div class="flex items-center justify-between px-3 py-2.5">
+        <div class="flex items-center gap-2">
+          <!-- <div class="w-2 h-2 rounded-full bg-indigo-400"></div> -->
+          <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">In Progress</span>
+          <span id="count-inprogress"
+            class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+        </div>
+        <button
+          class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors"
+          data-col="inprogress">+</button>
+      </div>
+      <div id="body-inprogress"
+        class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2"
+        data-col="inprogress"></div>
+    </div>
+
+    <div class="flex-none w-[608px] min-w-[280px] flex flex-col">
+      <div class="flex items-center justify-between px-3 py-2.5 ">
+        <div class="flex items-center gap-2">
+          <!-- <div class="w-2 h-2 rounded-full bg-emerald-400"></div> -->
+          <span class="text-[0.82rem] font-semibold text-[#172b4d] uppercase tracking-[0.05em]">Done</span>
+          <span id="count-done"
+            class="text-[0.75rem] bg-[#DFE1E6] text-[#5e6c84] px-1.5 py-px rounded-full font-medium">0</span>
+        </div>
+        <button
+          class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors"
+          data-col="done">+</button>
+      </div>
+      <div id="body-done"
+        class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2"
+        data-col="done"></div>
+    </div>
+
+  </section>
+
+  <!-- modal backdrop -->
+  <div
+    class=" modal-backdrop fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
+    id="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="fixed inset-0 bg-[rgba(9,30,66,0.55)] backdrop-blur-[4px]" data-close></div>
+    <div
+      class="modal relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
+      id="modal" role="document">
+      <header class="flex items-center justify-between border-b border-[#dfe1e6] px-5 py-[0.85rem] pr-4">
+        <div class="inline-flex items-center gap-2">
+          <span
+            class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
+            id="modalTypeIcon"></span>
+          <span class="text-[0.84rem] font-semibold tracking-[0.02em] text-[#5e6c84]" id="modalKey">
+            NEX-0
+          </span>
+        </div>
+        <button
+          class="inline-flex h-8 w-8 items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d]"
+          id="modal-close" type="button" aria-label="Close" data-close>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </header>
+
+      <div
+        class="grid grid-cols-[1.6fr_minmax(0,1fr)] gap-6 overflow-y-auto px-6 py-5 max-[960px]:grid-cols-1 max-[960px]:gap-4 max-[960px]:p-4">
+        <div class="min-w-0">
+          <input
+            class="-mx-[0.55rem] mb-3 w-[calc(100%+1.1rem)] rounded-[6px] border border-transparent bg-transparent px-[0.55rem] py-[0.4rem] text-[1.4rem] font-bold tracking-[-0.015em] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#f4f5f7] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+            id="task-title-input" type="text" placeholder="Issue title" />
+          <p id="title-error" class="text-[0.75rem] text-red-500 hidden">Please enter a task title.</p>
+
+          <section class="mt-4">
+            <p class="mb-[0.4rem] text-[0.72rem] font-bold uppercase tracking-[0.06em] text-[#5e6c84]">
+              Description
+            </p>
+            <textarea
+              class="min-h-[90px] w-full resize-y rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.8rem] py-[0.7rem] text-[0.92rem] leading-[1.55] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+              id="modalDesc" rows="5" placeholder="Add a description..."></textarea>
+          </section>
+        </div>
+
+        <aside class="self-start rounded-[8px] border border-[#dfe1e6] bg-[#fafbfc] px-4 pb-4 pt-[0.85rem]">
+          <p class="mb-[0.65rem] text-[0.7rem] font-bold uppercase tracking-[0.08em] text-[#5e6c84]">
+            Details
+          </p>
+
+          <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+            <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Status</span>
+            <select
+              class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+              id="task-col-select"></select>
+          </div>
+
+          <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+            <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Priority</span>
+            <select
+              class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+              id="task-priority-select">
+              <option value="highest">&uarr;&uarr; Highest</option>
+              <option value="high">&uarr; High</option>
+              <option value="medium">= Medium</option>
+              <option value="low">&darr; Low</option>
+              <option value="lowest">&darr;&darr; Lowest</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+            <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Type</span>
+            <select
+              class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
+              id="modalType">
+              <option value="task">Task</option>
+              <option value="story">Story</option>
+              <option value="bug">Bug</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-2 border-b border-[#dfe1e6] py-2">
+            <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Labels</span>
+            <div class="label-picker flex flex-wrap gap-[0.3rem]" id="tag-selector"></div>
+          </div>
+
+          <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
+            <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Assignee</span>
+            <div class="inline-flex items-center gap-[0.4rem]">
+              <span
+                class="member m-0 inline-flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 border-white bg-[#FF8F73] text-[0.62rem] font-semibold text-[rgba(9,30,66,0.8)]">
+                T
+              </span>
+              <span class="text-[0.84rem] text-[#172b4d]">You</span>
+            </div>
+          </div>
+
+          <!-- <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 py-2">
+              <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Created</span>
+              <span class="text-[0.82rem] text-[#172b4d]" id="modalCreated">&mdash;</span>
+            </div> -->
+        </aside>
+      </div>
+
+      <footer class="flex justify-between gap-2 border-t border-[#dfe1e6] bg-[#fafbfc] px-5 py-[0.85rem]">
+        <button
+          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
+          type="button" id="modal-delete">
+          Delete
+        </button>
+        <button
+          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6]"
+          type="button" id="modal-cancel" data-close>
+          Done
+        </button>
+        <!-- ✅ Add Create Task button -->
+        <button
+          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white hover:bg-[#0747a6] transition-all"
+          type="button" id="modal-submit">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Create Task
+        </button>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast"
+    class="toast fixed bottom-6 left-1/2 bg-[#172b4d] text-white text-[0.82rem] font-medium px-4 py-2.5 rounded-xl flex items-center gap-2 z-[100] whitespace-nowrap shadow-lg">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+    <span id="toast-msg">Task created!</span>
+  </div>
+
+  <script type="module" src="./js/dashboard.js"></script>
+  
+</body>
+
 </html>

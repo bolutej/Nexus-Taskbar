@@ -49,26 +49,9 @@ const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toast-msg');
 
 //Profile Modal
-const profileBackdrop = document.getElementById('profile-backdrop');
-const profilePanel = document.getElementById('profile-panel');
-const openProfileBtn = document.getElementById('open-profile-btn');
-const closeProfileBtn = document.getElementById('close-profile-btn');
-const cancelProfileBtn = document.getElementById('cancel-profile-btn');
-const profileForm = document.getElementById('profile-form');
-const firstInput = document.getElementById('first-name');
-const lastInput = document.getElementById('last-name');
-const emailInput = document.getElementById('profile-email');
-const roleSelect = document.getElementById('profile-role');
-const saveBtn = document.getElementById('save-profile-btn');
-const avatarCircle = document.getElementById('avatar-circle');
-const avatarName = document.getElementById('avatar-name');
-const avatarRole = document.getElementById('avatar-role');
-const emailError = document.getElementById('email-error');
-const profileToast = document.getElementById('profile-toast');
-const profileToastMsg = document.getElementById('profile-toast-msg');
-const avatarUpload = document.getElementById('avatar-upload');
+import { initProfileModal } from './profileModal.js';
 
-
+initProfileModal();
 
 
 function openModal() {
@@ -236,84 +219,77 @@ function createProjectCard(title, description) {
 
 //Profile Modal
 
-function openProfileModal() {
-    profileBackdrop.classList.remove('hidden');
-    requestAnimationFrame(() => {
-        profileBackdrop.classList.add('open');
-        profilePanel.classList.add('open');
-    });
-}
+// export function openProfileModal() {
+//     profileBackdrop.classList.remove('hidden');
+//     requestAnimationFrame(() => {
+//         profileBackdrop.classList.add('open');
+//         profilePanel.classList.add('open');
+//     });
+// }
 
-function closeProfileModal() {
-    profileBackdrop.classList.remove('open');
-    profilePanel.classList.remove('open');
-    setTimeout(() => profileBackdrop.classList.add('hidden'), 220);
-}
+// export function closeProfileModal() {
+//     profileBackdrop.classList.remove('open');
+//     profilePanel.classList.remove('open');
+//     setTimeout(() => profileBackdrop.classList.add('hidden'), 220);
+// }
 
-openProfileBtn.addEventListener('click', openProfileModal);
+// openProfileBtn.addEventListener('click', openProfileModal);
 
-[closeProfileBtn, cancelProfileBtn].forEach(btn => btn.addEventListener('click', closeProfileModal));
+// [closeProfileBtn, cancelProfileBtn].forEach(btn => btn.addEventListener('click', closeProfileModal));
 
-profileBackdrop.addEventListener('click', (e) => {
-    if(e.target === profileBackdrop) 
-        closeProfileModal();
-})
+// profileBackdrop.addEventListener('click', (e) => {
+//     if(e.target === profileBackdrop) 
+//         closeProfileModal();
+// })
 
-document.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape' && profileBackdrop.classList.contains('open')) 
-        closeProfileModal();
-});
+// document.addEventListener('keydown', (e) => {
+//     if(e.key === 'Escape' && profileBackdrop.classList.contains('open')) 
+//         closeProfileModal();
+// });
 
-//Live avatar initials update
-function updateAvatar() {
-    const first = firstInput.value.trim();
-    const last = lastInput.value.trim();
-    const initials = (first[0] || '') + (last[0] || '');
-    avatarCircle.textContent = initials.toUpperCase() || 'T';
-    avatarName.textContent = [first, last].filter(Boolean).join('') || 'Your Name';
-    avatarName.textContent = roleSelect.value;
-}
+// //Live avatar initials update
+// export function updateAvatar() {
+//     const first = firstInput.value.trim();
+//     const last = lastInput.value.trim();
+//     const initials = (first[0] || '') + (last[0] || '');
+//     avatarCircle.textContent = initials.toUpperCase() || 'T';
+//     avatarName.textContent = [first, last].filter(Boolean).join('') || 'Your Name';
+//     avatarName.textContent = roleSelect.value;
+// }
 
-[firstInput, lastInput].forEach(i => i.addEventListener('input', updateAvatar));
-roleSelect.addEventListener('change', updateAvatar);
+// [firstInput, lastInput].forEach(i => i.addEventListener('input', updateAvatar));
+// roleSelect.addEventListener('change', updateAvatar);
 
-//Avatar image uplaod preview
-avatarUpload.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        avatarCircle.style.backgroundImage = `url(${ev.target.result})`;
-        avatarCircle.style.backgroundSize = 'cover';
-        avatarCircle.style.backgroundPosition = 'center';
-        avatarCircle.textContent = '';
-    }
-    reader.readAsDataURL(file);
-});
+// //Avatar image uplaod preview
+// avatarUpload.addEventListener('change', (e) => {
+//     const file = e.target.files[0];
+//     if (!file) return;
+//     const reader = new FileReader();
+//     reader.onload = (ev) => {
+//         avatarCircle.style.backgroundImage = `url(${ev.target.result})`;
+//         avatarCircle.style.backgroundSize = 'cover';
+//         avatarCircle.style.backgroundPosition = 'center';
+//         avatarCircle.textContent = '';
+//     }
+//     reader.readAsDataURL(file);
+// });
 
 //Email validation
 
-function isValidEmail(val) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-}
-emailInput.addEventListener('input', () => {
-    if (isValidEmail(emailInput.value)) {
-        emailError.classList.add('hidden');
-        emailInput.classList.remove('border-red-400');
-    }
-});
+// function isValidEmail(val) {
+//     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+// }
+// emailInput.addEventListener('input', () => {
+//     if (isValidEmail(emailInput.value)) {
+//         emailError.classList.add('hidden');
+//         emailInput.classList.remove('border-red-400');
+//     }
+// });
 
 
 //Form submit
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!isValidEmail(emailInput.value)) {
-        emailError.classList.remove('hidden');
-        emailInput.classList.add('border-red-400');
-        emailInput.focus();
-        return;
-    }
-
     saveBtn.disabled = true;
     saveBtn.innerHTML = '<span class="spinner></span> Saving...';
 
@@ -327,18 +303,10 @@ form.addEventListener('submit', (e) => {
     }, 900);
 });
 
+// if (!isValidEmail(emailInput.value)) {
+//     emailError.classList.remove('hidden');
+//     emailInput.classList.add('border-red-400');
+//     emailInput.focus();
+//     return;
+// }
 
-
-// Logout
-// async function logOut() {
-//     try {
-//       await signOut(auth);
-//       window.location.href = "auth.html";
-//     } catch (error) {
-//       console.error("Sign-out error:", error.message);
-//     }
-//   }
-  
-//   // Hook up logout button
-//   const logoutBtn = document.getElementById("logoutBtn");
-//   if (logoutBtn) logoutBtn.addEventListener("click", logOut);

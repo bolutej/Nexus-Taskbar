@@ -1,25 +1,32 @@
-import { supabase } from '../supabase.js';
+// import { supabase } from '../supabase.js';
+import { initProfileModal } from "./profileModal.js";
  
-const urlParams = new URLSearchParams(window.location.search);
-const projectName = urlParams.get('project') || 'Board';
-document.getElementById('project-name').textContent = projectName;
-document.getElementById('board-title').textContent = projectName;
+// const urlParams = new URLSearchParams(window.location.search);
+// const projectName = urlParams.get('project') || 'Board';
+// document.getElementById('project-name').textContent = projectName;
+// document.getElementById('board-title').textContent = projectName;
 
-// Auth check
-const { data: { session } } = await supabase.auth.getSession();
-if (!session) {
-  window.location.href = 'auth.html';
-} else {
-  const user = session.user;
-  const initials = (user.user_metadata?.full_name || user.email).slice(0, 2).toUpperCase();
-  document.getElementById('avatar-btn').textContent = initials;
-}
+// // Auth check
+// const { data: { session } } = await supabase.auth.getSession();
+// if (!session) {
+//   window.location.href = 'auth.html';
+// } else {
+//   const user = session.user;
+//   const initials = (user.user_metadata?.full_name || user.email).slice(0, 2).toUpperCase();
+//   document.getElementById('avatar-btn').textContent = initials;
+// }
 
-// Logout
-document.getElementById('logout-btn').addEventListener('click', async () => {
-  await supabase.auth.signOut();
-  window.location.href = 'auth.html';
-});
+// // Logout
+// document.getElementById('logout-btn').addEventListener('click', async () => {
+//   await supabase.auth.signOut();
+//   window.location.href = 'auth.html';
+// });
+
+//profie modal
+  // projects.js — add this at the top
+initProfileModal(); // ← call it to set up the modal
+
+
 
 let tasks = [];
 let taskCounter = 1;
@@ -129,11 +136,11 @@ const iconContent = task.col === 'done'
     </div>
     <div class="flex items-center gap-1.5">
       ${priorityIcon}
-      <div class="w-[22px] h-[22px] rounded-full bg-gradient-to-br from-[#ff8f73] to-[#ff5630] text-white text-[0.62rem] font-semibold flex items-center justify-center">${document.getElementById('avatar-btn').textContent}</div>
+      
     </div>
   </div>
 `;
-
+//<div class="w-[22px] h-[22px] rounded-full bg-gradient-to-br from-[#ff8f73] to-[#ff5630] text-white text-[0.62rem] font-semibold flex items-center justify-center">${document.getElementById('avatar-btn').textContent}</div>
 card.addEventListener('dragstart', () => {
   draggedCard = card;
   setTimeout(() => card.classList.add('dragging'), 0);
@@ -173,3 +180,34 @@ document.querySelectorAll('.column-body').forEach(body => {
 })
 
 //Update counts + empty status
+function updateCounts() {
+  ['backlog', 'inprogress', 'done'].forEach(col => {
+    const count = document.getElementById(`body-${col}`).querySelectorAll('.task-card').length;
+    document.getElementById(`count-${col}`).textContent = count;
+    const body = document.getElementById(`body-${col}`);
+    if (count === 0 && !body.querySelector('.empty-state')) {
+      body.innerHTML = `<div class="empty-state flex flex-col items-center justify-center py-8 text-[#97a0af] text-[0.8rem] gap-1 text-center"><div class="text-2xl opacity-40">○</div><span>No tasks yet</span></div>`;
+    }
+  });
+  const total = tasks.length;
+  document.getElementById('task-count').textContent = `${total} task${total !== 1 ? 's' : ''}`;
+}
+
+//Toast
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// Init + sample tasks
+updateCounts();
+const samples = [
+  { id: `NEX-${taskCounter++}`, title: 'Implement dashboard metrics', tags: ['frontend', 'design'], col: 'backlog', priority: 'high' },
+  { id: `NEX-${taskCounter++}`, title: 'Revamp navigation state', tags: ['backend'], col: 'inprogress', priority: 'medium' },
+  { id: `NEX-${taskCounter++}`, title: 'Set up Supabase tables', tags: ['backend'], col: 'done', priority: 'low' },
+];
+samples.forEach(t => { tasks.push(t); renderCard(t); });
+updateCounts();
