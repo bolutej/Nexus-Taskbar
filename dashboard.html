@@ -43,24 +43,14 @@
       border: 1px solid currentColor;
     }
 
-    .modal-backdrop {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
+    #modal-backdrop {
+      display: none;
     }
 
-    .modal-backdrop.open {
+    #modal-backdrop.open {
+      display: flex;
       opacity: 1;
       pointer-events: all;
-    }
-
-    .modal {
-      transform: scale(0.95) translateY(10px);
-      transition: transform 0.22s;
-    }
-
-    .modal-backdrop.open .modal {
-      transform: scale(1) translateY(0);
     }
 
     .toast {
@@ -190,6 +180,16 @@
       border-radius: 50%;
       animation: spin 0.7s linear infinite;
     }
+
+    /* Force modal visibility — add at very bottom of style tag */
+    #modal-backdrop[aria-hidden="false"] {
+      opacity: 1 !important;
+    }
+
+    #modal-backdrop[aria-hidden="true"] {
+      display: none !important;
+      opacity: 0 !important;
+    }
   </style>
 </head>
 
@@ -242,8 +242,7 @@
           <path d="M12 17h.01" />
         </svg>
       </button>
-      <div 
-        id="open-profile-btn"
+      <div id="open-profile-btn"
         class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
         aria-label="Account">
         T
@@ -422,7 +421,7 @@
         </svg>
         Filter
       </button>
-      <button
+      <button id="add-task-btn"
         class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
         type="button">
         <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
@@ -467,7 +466,7 @@
         </div>
         <button
           class="column-add-btn w-[26px] h-[26px] rounded-md border-none bg-transparent text-[#97a0af] cursor-pointer flex items-center justify-center text-lg hover:bg-[#f4f5f7] hover:text-[#172b4d] transition-colors"
-          data-col="backlog" id="add-task-btn">+</button>
+          data-col="backlog">+</button>
       </div>
       <div id="body-backlog"
         class="column-body bg-[#f8f9fb] border border-[#e8eaed] border-t-0 rounded-b-[10px] p-2 min-h-[200px] flex flex-col gap-2"
@@ -512,8 +511,8 @@
 
   <!-- modal backdrop -->
   <div
-    class=" modal-backdrop fixed inset-0 z-[100] hidden items-start justify-center overflow-y-auto px-6 pb-8 pt-16 aria-[hidden=false]:flex aria-[hidden=false]:animate-[fade_180ms_ease_both] max-[960px]:p-4"
-    id="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    class="fixed inset-0 z-[100] items-start justify-center overflow-y-auto px-6 pb-8 pt-16 max-[960px]:p-4"
+    id="modal-backdrop">
     <div class="fixed inset-0 bg-[rgba(9,30,66,0.55)] backdrop-blur-[4px]" data-close></div>
     <div
       class="modal relative flex max-h-[calc(100vh-6rem)] w-full max-w-[820px] flex-col overflow-hidden rounded-[12px] bg-white shadow-[0_16px_40px_rgba(9,30,66,0.18)] animate-[pop_200ms_cubic-bezier(0.2,0.8,0.2,1.05)_both]"
@@ -523,7 +522,7 @@
           <span
             class="type-icon inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center rounded-[3px] text-[9px] text-white data-[type=task]:bg-[#1868db] data-[type=story]:bg-[#36b37e] data-[type=bug]:rounded-full data-[type=bug]:bg-[#de350b]"
             id="modalTypeIcon"></span>
-          <span class="text-[0.84rem] font-semibold tracking-[0.02em] text-[#5e6c84]" id="modalKey">
+          <span class="mr-[630px] text-[0.84rem] font-semibold tracking-[0.02em] text-[#5e6c84]" id="modalKey">
             NEX-0
           </span>
         </div>
@@ -564,7 +563,11 @@
             <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Status</span>
             <select
               class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-              id="task-col-select"></select>
+              id="task-col-select">
+              <option value="backlog">Backlog</option>
+              <option value="inprogress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
           </div>
 
           <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
@@ -584,16 +587,23 @@
             <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Type</span>
             <select
               class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
-              id="modalType">
-              <option value="task">Task</option>
-              <option value="story">Story</option>
-              <option value="bug">Bug</option>
+              id="task-col-select">
+              <option value="backlog">Task</option>
+              <option value="inprogress">Story</option>
+              <option value="done">Bug</option>
             </select>
           </div>
 
           <div class="grid grid-cols-[80px_minmax(0,1fr)] items-start gap-2 border-b border-[#dfe1e6] py-2">
             <span class="text-[0.78rem] font-semibold text-[#5e6c84]">Labels</span>
-            <div class="label-picker flex flex-wrap gap-[0.3rem]" id="tag-selector"></div>
+            <div class="label-picker flex flex-wrap gap-[0.3rem]" id="tag-selector">
+              <span class="tag-option tag-frontend selected text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="frontend">Frontend</span>
+              <span class="tag-option tag-design text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="design">Design</span>
+              <span class="tag-option tag-backend text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="backend">Backend</span>
+              <span class="tag-option tag-bug text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="bug">Bug</span>
+              <span class="tag-option tag-feature text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="feature">Feature</span>
+              <span class="tag-option tag-docs text-[0.68rem] font-semibold px-2 py-0.5 rounded cursor-pointer uppercase tracking-[0.04em] transition-opacity" data-tag="docs">Docs</span>
+            </div>
           </div>
 
           <div class="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-2 border-b border-[#dfe1e6] py-2">
@@ -614,17 +624,17 @@
         </aside>
       </div>
 
-      <footer class="flex justify-between gap-2 border-t border-[#dfe1e6] bg-[#fafbfc] px-5 py-[0.85rem]">
+      <footer class="flex border-t border-[#dfe1e6] bg-[#fafbfc] px-5 py-[0.85rem]">
         <button
-          class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
+          class="mr-[520px] inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-transparent px-4 text-[0.88rem] font-semibold text-red-700 transition-all duration-150 ease-in-out hover:bg-red-100 hover:text-red-800"
           type="button" id="modal-delete">
           Delete
         </button>
-        <button
+        <!-- <button
           class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white transition-all duration-150 ease-in-out hover:bg-[#0747a6]"
           type="button" id="modal-cancel" data-close>
           Done
-        </button>
+        </button> --> 
         <!-- ✅ Add Create Task button -->
         <button
           class="inline-flex h-[38px] items-center gap-[0.45rem] rounded-[6px] bg-[#1868db] px-4 text-[0.88rem] font-semibold text-white hover:bg-[#0747a6] transition-all"
@@ -636,6 +646,7 @@
           Create Task
         </button>
       </footer>
+
     </div>
   </div>
 
@@ -648,7 +659,7 @@
   </div>
 
   <script type="module" src="./js/dashboard.js"></script>
-  
+
 </body>
 
 </html>

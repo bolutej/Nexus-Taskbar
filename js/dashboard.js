@@ -51,10 +51,13 @@ const closeModal = () => {
 };
 
 document.getElementById('add-task-btn').addEventListener('click', () => openModal());
-document.getElementById('modal-close').addEventListener('click', () => closeModal());
-document.getElementById('modal-cancel').addEventListener('click', () => closeModal());
-backdrop.addEventListener('click', e => { if (e.target === backdrop) closeModal(); });
-document.addEventListener('keydown', e => {if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal(); });
+// ✅ Replace with this — handles X button, Done button, and backdrop all at once
+document.querySelectorAll('[data-close]').forEach(el => {
+  el.addEventListener('click', closeModal);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && backdrop.classList.contains('open')) closeModal();
+});
 
 document.querySelectorAll('.column-add-btn').forEach(btn => {
   btn.addEventListener('click', () => openModal(btn.dataset.col));
