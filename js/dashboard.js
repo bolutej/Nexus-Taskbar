@@ -1,26 +1,44 @@
-// import { supabase } from '../supabase.js';
+import { supabase } from '../supabase.js';
 import { initProfileModal } from "./profileModal.js";
- 
-// const urlParams = new URLSearchParams(window.location.search);
-// const projectName = urlParams.get('project') || 'Board';
-// document.getElementById('project-name').textContent = projectName;
-// document.getElementById('board-title').textContent = projectName;
 
-// // Auth check
-// const { data: { session } } = await supabase.auth.getSession();
-// if (!session) {
-//   window.location.href = 'auth.html';
-// } else {
-//   const user = session.user;
-//   const initials = (user.user_metadata?.full_name || user.email).slice(0, 2).toUpperCase();
-//   document.getElementById('avatar-btn').textContent = initials;
-// }
+async function init() {
+  // Auth check FIRST
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = 'auth.html';
+    return; // ✅ stop everything if not signed in
+  }
 
-// // Logout
-// document.getElementById('logout-btn').addEventListener('click', async () => {
-//   await supabase.auth.signOut();
-//   window.location.href = 'auth.html';
-// });
+  // Fill in user info
+  const user = session.user;
+  userInitials = (user.user_metadata?.full_name || user.email).slice(0, 2).toUpperCase();
+  const avatarBtn = document.getElementById('avatar-btn');
+  if (avatarBtn) avatarBtn.textContent = userInitials;
+
+  // Fill in project name
+  const urlParams = new URLSearchParams(window.location.search);
+  const projectName = urlParams.get('project') || 'Board';
+  const projectNameEl = document.getElementById('project-name');
+  const boardTitleEl = document.getElementById('board-title');
+  if (projectNameEl) projectNameEl.textContent = projectName;
+  if (boardTitleEl) boardTitleEl.textContent = projectName;
+
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    window.location.href = 'auth.html';
+  });
+
+  // Init profile modal
+  initProfileModal();
+
+  // Load sample tasks
+  updateCounts();
+  
+}
+
+// Start
+init();
 
 //profie modal
   // projects.js — add this at the top
@@ -33,6 +51,7 @@ let taskCounter = 1;
 let selectedTags = ['frontend'];
 let draggedCard = null;
 let toastTimer;
+let userInitials = 'T';
 
 const backdrop = document.getElementById('modal-backdrop');
 
@@ -204,13 +223,3 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
 }
-
-// Init + sample tasks
-updateCounts();
-const samples = [
-  { id: `NEX-${taskCounter++}`, title: 'Implement dashboard metrics', tags: ['frontend', 'design'], col: 'backlog', priority: 'high' },
-  { id: `NEX-${taskCounter++}`, title: 'Revamp navigation state', tags: ['backend'], col: 'inprogress', priority: 'medium' },
-  { id: `NEX-${taskCounter++}`, title: 'Set up Supabase tables', tags: ['backend'], col: 'done', priority: 'low' },
-];
-samples.forEach(t => { tasks.push(t); renderCard(t); });
-updateCounts();

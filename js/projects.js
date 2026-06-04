@@ -1,5 +1,6 @@
 // js/projects.js
 import { supabase } from '../supabase.js';
+import { logOut } from './auth.js';
 
 // ✅ Protect page and fill in user info
 supabase.auth.onAuthStateChange((event, session) => {
@@ -15,14 +16,11 @@ supabase.auth.onAuthStateChange((event, session) => {
     const content = document.getElementById('projects-content');
     if (loading) loading.style.display = 'none';
     if (content) content.style.display = 'block';
-
+    loadProjects();
   } else {
     window.location.href = 'auth.html';
   }
 });
-
-// ✅ Logout button
-import { logOut } from './auth.js';
 
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
   try {
@@ -31,6 +29,48 @@ document.getElementById('logout-btn')?.addEventListener('click', async () => {
     console.error('Logout failed:', error.message);
   }
 });
+
+    // ✅ Load projects from Supabase
+async function loadProjects() {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+  
+    const { data: projects, error } = await supabase
+      .from('projects')
+      .select('*')
+      .order('created_at', { ascending: false });
+  
+    if (error) { console.error('Error loading projects:', error.message); return; }
+  
+    const container = document.getElementById('projects-container');
+    container.innerHTML = '';
+  
+    if (projects.length === 0) {
+      container.innerHTML = '<p class="text-slate-400 text-sm p-4">No projects yet. Create one!</p>';
+      return;
+    }
+  
+    projects.forEach(p => createProjectCard(p.name, p.description, p.id));
+  
+    const taskSummary = document.getElementById('task-summary');
+    if (taskSummary) taskSummary.textContent = `— ${projects.length} Project${projects.length !== 1 ? 's' : ''} across 2 teams`;
+  }
+  
+  // ✅ Save project to Supabase
+  async function saveProject(name, description) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+  
+    const { data, error } = await supabase
+      .from('projects')
+      .insert([{ name, description, user_id: session.user.id }])
+      .select()
+      .single();
+  
+    if (error) { console.error('Error saving project:', error.message); throw error; }
+    return data;
+  }
+
 //Create Project Modal 
 const openBtn = document.getElementById('open-modal-btn');
 const closeBtn = document.getElementById('close-modal-btn');
@@ -136,16 +176,21 @@ form.addEventListener('submit', (e) => {
     submitBtn.disabled = true;
     submitBtn.innerHTML = `<span class="spinner"></span> Creating...`;
 
-    setTimeout(() => {
-        createProjectCard(title, description);
-        
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Create project`;
-        closeModal();
-        setTimeout(resetForm, 220);
-        showToast('"' + title + '"created successfully');
-    }, 900);
+    setTimeout(async () => {
+        try {
+          const project = await saveProject(title, description);
+          createProjectCard(title, description, project.id);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<svg ...></svg> Create project`;
+          closeModal();
+          setTimeout(resetForm, 220);
+          showToast('"' + title + '" created successfully');
+        } catch (error) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = 'Create project';
+          showToast('Error creating project. Try again.');
+        }
+      }, 900);
 }); 
 
 let toastTimer;
@@ -161,7 +206,7 @@ function showToast(msg) {
     }, 3000)
 }
 
-function createProjectCard(title, description) {
+function createProjectCard(title, description, projectId) {
     const container = document.getElementById('projects-container');
 
     const card = document.createElement('div');
@@ -194,7 +239,9 @@ function createProjectCard(title, description) {
         <p class="font-bold text-lg text-slate-200">${description}</p>
         <p class="pt-2">100% completed</p>
         <div class="flex justify-between pt-10">
-        <a href=""><button class="hover:underline">View</button></a>
+        <a href="dashboard.html?project=${encodeURIComponent(title)}&id=${projectId}">
+  <button class="hover:underline">View</button>
+</a>
         <span><i class="fa-regular fa-calendar mr-1"></i>${new Date().toLocaleDateString()}</span>
       </div>
       </div>
