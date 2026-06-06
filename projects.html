@@ -12,21 +12,22 @@
   
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-    #modal-backdrop { opacity: 0; transition: opacity 200ms ease;  }
-    #modal-backdrop.open { opacity: 1; }
-    #modal-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
-    #modal-panel.open { opacity: 1; transform: scale(1) translateY(0); }
-    input:focus, textarea:focus { outline: none; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
-    /* Profile backdrop */
-    #profile-backdrop { opacity: 0; transition: opacity 200ms ease; }
-    #profile-backdrop.open { opacity: 1; }
-    #profile-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
-    #profile-panel.open { opacity: 1; transform: scale(1) translateY(0); }
-    input:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.12); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+  /* Create Project Modal */
+  #modal-backdrop { opacity: 0; transition: opacity 200ms ease; display: none; }
+  #modal-backdrop.open { opacity: 1; display: flex; }
+  #modal-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #modal-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+
+  /* Profile Modal */
+  #profile-backdrop { opacity: 0; display: none; transition: opacity 200ms ease; }
+  #profile-backdrop.open { opacity: 1; display: flex; }
+  #profile-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #profile-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+
+  /* Shared */
+  input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.12); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
 </style>
 </head>
 
@@ -79,6 +80,32 @@
           <path d="M12 17h.01" />
         </svg>
       </button>
+      <!-- information modal -->
+       <div id="information-backdrop" class="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+        <div id="information-panel" class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+          <!-- Header -->
+          <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+            <div>
+              <div class="flex items-center justify-between">
+                <div>
+              <!-- <h2 id="information-title" class="text-[17px] font-semibold text-[#0F0C29]">Information</h2>
+              <p class="text-sm text-slate-400 mt-0.5">Manage your personal info</p> -->
+            </div>
+              <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:bg-slate-200 transition-colors">
+                ✕
+              </button>
+            </div>
+              <img src="img/info.png" alt="info" class="m-0 ">
+              <p class="text-[17px] font-semibold text-[#0F0C29]">Discover what's new on Nexus</p>
+              <p>Get more out of Nexus with our new features.</p>
+              <button class="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-xl active:scale-95 transition-all duration-150 mr-15">
+                View Updates
+              </button>
+            </div>
+          </div>
+        </div>
+       </div>
+
       <button
         id="open-profile-btn"
         class="ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
@@ -88,7 +115,7 @@
 
       <!-- Profile Modal -->
       <div id="profile-backdrop"
-    class="hidden fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+    class="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
  
     <!-- Panel -->
     <div id="profile-panel" role="dialog" aria-modal="true" aria-labelledby="profile-title"

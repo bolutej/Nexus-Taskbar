@@ -1,6 +1,7 @@
 // js/projects.js
 import { supabase } from '../supabase.js';
 import { logOut } from './auth.js';
+import { initProfileModal } from './profileModal.js';
 
 // ✅ Protect page and fill in user info
 supabase.auth.onAuthStateChange((event, session) => {
@@ -89,7 +90,6 @@ const toast = document.getElementById('toast');
 const toastMsg = document.getElementById('toast-msg');
 
 //Profile Modal
-import { initProfileModal } from './profileModal.js';
 
 initProfileModal();
 

@@ -1,8 +1,8 @@
 // js/profileModal.js
 export function initProfileModal() {
-    const profileBackdrop = document.getElementById('profile-backdrop');
+const profileBackdrop = document.getElementById('profile-backdrop');
 const profilePanel = document.getElementById('profile-panel');
-const openProfileBtn = document.querySelector('.open-profile-btn')
+const openProfileBtn = document.getElementById('open-profile-btn');
 const closeProfileBtn = document.getElementById('close-profile-btn');
 const cancelProfileBtn = document.getElementById('cancel-profile-btn');
 const profileForm = document.getElementById('profile-form');
@@ -22,17 +22,13 @@ const avatarUpload = document.getElementById('avatar-upload');
     if (!profileBackdrop) return;
   
     function openProfileModal() {
-      profileBackdrop.classList.remove('hidden');
-      requestAnimationFrame(() => {
-        profileBackdrop.classList.add('open');
-        profilePanel.classList.add('open');
-      });
+      profileBackdrop.classList.add('open');
+      profilePanel.classList.add('open');
     }
-  
+    
     function closeProfileModal() {
       profileBackdrop.classList.remove('open');
       profilePanel.classList.remove('open');
-      setTimeout(() => profileBackdrop.classList.add('hidden'), 220);
     }
   
     function updateAvatar() {
