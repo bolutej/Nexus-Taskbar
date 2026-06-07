@@ -2,6 +2,7 @@
 import { supabase } from '../supabase.js';
 import { logOut } from './auth.js';
 import { initProfileModal } from './profileModal.js';
+import { initInfoModal } from './info.js';
 
 // ✅ Protect page and fill in user info
 supabase.auth.onAuthStateChange((event, session) => {
@@ -92,6 +93,7 @@ const toastMsg = document.getElementById('toast-msg');
 //Profile Modal
 
 initProfileModal();
+initInfoModal();
 
 
 function openModal() {
@@ -264,76 +266,6 @@ function createProjectCard(title, description, projectId) {
 }
 
 
-//Profile Modal
-
-// export function openProfileModal() {
-//     profileBackdrop.classList.remove('hidden');
-//     requestAnimationFrame(() => {
-//         profileBackdrop.classList.add('open');
-//         profilePanel.classList.add('open');
-//     });
-// }
-
-// export function closeProfileModal() {
-//     profileBackdrop.classList.remove('open');
-//     profilePanel.classList.remove('open');
-//     setTimeout(() => profileBackdrop.classList.add('hidden'), 220);
-// }
-
-// openProfileBtn.addEventListener('click', openProfileModal);
-
-// [closeProfileBtn, cancelProfileBtn].forEach(btn => btn.addEventListener('click', closeProfileModal));
-
-// profileBackdrop.addEventListener('click', (e) => {
-//     if(e.target === profileBackdrop) 
-//         closeProfileModal();
-// })
-
-// document.addEventListener('keydown', (e) => {
-//     if(e.key === 'Escape' && profileBackdrop.classList.contains('open')) 
-//         closeProfileModal();
-// });
-
-// //Live avatar initials update
-// export function updateAvatar() {
-//     const first = firstInput.value.trim();
-//     const last = lastInput.value.trim();
-//     const initials = (first[0] || '') + (last[0] || '');
-//     avatarCircle.textContent = initials.toUpperCase() || 'T';
-//     avatarName.textContent = [first, last].filter(Boolean).join('') || 'Your Name';
-//     avatarName.textContent = roleSelect.value;
-// }
-
-// [firstInput, lastInput].forEach(i => i.addEventListener('input', updateAvatar));
-// roleSelect.addEventListener('change', updateAvatar);
-
-// //Avatar image uplaod preview
-// avatarUpload.addEventListener('change', (e) => {
-//     const file = e.target.files[0];
-//     if (!file) return;
-//     const reader = new FileReader();
-//     reader.onload = (ev) => {
-//         avatarCircle.style.backgroundImage = `url(${ev.target.result})`;
-//         avatarCircle.style.backgroundSize = 'cover';
-//         avatarCircle.style.backgroundPosition = 'center';
-//         avatarCircle.textContent = '';
-//     }
-//     reader.readAsDataURL(file);
-// });
-
-//Email validation
-
-// function isValidEmail(val) {
-//     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-// }
-// emailInput.addEventListener('input', () => {
-//     if (isValidEmail(emailInput.value)) {
-//         emailError.classList.add('hidden');
-//         emailInput.classList.remove('border-red-400');
-//     }
-// });
-
-
 //Form submit
 form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -349,11 +281,3 @@ form.addEventListener('submit', (e) => {
         showToast('Profile updated successfully');
     }, 900);
 });
-
-// if (!isValidEmail(emailInput.value)) {
-//     emailError.classList.remove('hidden');
-//     emailInput.classList.add('border-red-400');
-//     emailInput.focus();
-//     return;
-// }
-

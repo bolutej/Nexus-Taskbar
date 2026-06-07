@@ -24,6 +24,12 @@
   #profile-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
   #profile-panel.open { opacity: 1; transform: scale(1) translateY(0); }
 
+  /* Information Modal */
+  #information-backdrop { opacity: 0; display: none; transition: opacity 200ms ease; }
+  #information-backdrop.open { opacity: 1; display: flex; }
+  #information-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #information-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+
   /* Shared */
   input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 3px rgba(79,70,229,0.12); }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -71,6 +77,7 @@
         </svg>
       </button>
       <button
+      id="open-info-btn"
         class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
         type="button" aria-label="Help">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -81,25 +88,23 @@
         </svg>
       </button>
       <!-- information modal -->
-       <div id="information-backdrop" class="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
-        <div id="information-panel" class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+       <div id="information-backdrop" class="fixed inset-0 z-40 flex items-start justify-end pt-24">
+        <div id="information-panel" class="bg-white rounded-xl shadow-2xl overflow-hidden">
           <!-- Header -->
-          <div class="flex items-start justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+          <div class="flex justify-between px-6 pt-6 pb-4 ">
             <div>
               <div class="flex items-center justify-between">
                 <div>
-              <!-- <h2 id="information-title" class="text-[17px] font-semibold text-[#0F0C29]">Information</h2>
-              <p class="text-sm text-slate-400 mt-0.5">Manage your personal info</p> -->
             </div>
-              <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:bg-slate-200 transition-colors">
+              <button id="close-info-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:bg-slate-200 transition-colors">
                 ✕
               </button>
             </div>
-              <img src="img/info.png" alt="info" class="m-0 ">
-              <p class="text-[17px] font-semibold text-[#0F0C29]">Discover what's new on Nexus</p>
-              <p>Get more out of Nexus with our new features.</p>
-              <button class="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-xl active:scale-95 transition-all duration-150 mr-15">
-                View Updates
+              <img src="img/info.png" alt="info" class="w-80 h-50 rounded-full">
+              <p class="text-[17px] font-semibold text-[#0F0C29] pl-4 ">Discover what's new on Nexus</p>
+              <p class="pl-4 pb-5">Get more out of Nexus with new features.</p>
+              <button id="save-info-btn" class="w-full py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all duration-150">
+                View updates
               </button>
             </div>
           </div>
@@ -265,7 +270,7 @@
   </header>
   
   <main id="card" class="mx-6 mt-3 rounded-[12px] bg-white px-6 py-[1.1rem] shadow-[0_1px_1px_rgba(9,30,66,0.04),0_0_0_1px_rgba(9,30,66,0.04)] max-[960px]:mx-[0.6rem] opacity-0' 'translate-y-2' 'pointer-events-none">
-    <div class="flex gap-3 px-5 py-2 rounded-lg">
+    <div class="flex gap-3 px-5 rounded-lg">
       <button class="border px-5 py-2 rounded-full text-[#4f46e5] bg-indigo-50"><i class="fa-solid fa-circle pr-1"></i>Active</button>
       <button class="border px-5 py-2 rounded-full text-[#ff8f73]"><i class="fa-solid fa-pause pr-1"></i> Paused</button>
       <button class="border px-5 py-2 rounded-full text-green-500"><i class="fa-solid fa-circle-check pr-1"></i>Done</button>
@@ -379,7 +384,7 @@
     </div>
       
     </section>
-    <div id="projects-container" class="mt-6 px-4 py-5 flex flex-wrap gap-3">
+    <div id="projects-container" class="py-5 flex flex-wrap gap-3">
       
     </div>
   
