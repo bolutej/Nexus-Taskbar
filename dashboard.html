@@ -139,25 +139,15 @@
     }
 
     /* Profile backdrop */
-    #profile-backdrop {
-      opacity: 0;
-      transition: opacity 200ms ease;
-    }
-
-    #profile-backdrop.open {
-      opacity: 1;
-    }
-
-    #profile-panel {
-      opacity: 0;
-      transform: scale(0.95) translateY(10px);
-      transition: opacity 220ms ease, transform 220ms ease;
-    }
-
-    #profile-panel.open {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
+    #profile-backdrop { opacity: 0; display: none; transition: opacity 200ms ease; }
+  #profile-backdrop.open { opacity: 1; display: flex; }
+  #profile-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #profile-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+     /* Information Modal */
+  #information-backdrop { opacity: 0; display: none; transition: opacity 200ms ease; }
+  #information-backdrop.open { opacity: 1; display: flex; }
+  #information-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #information-panel.open { opacity: 1; transform: scale(1) translateY(0); }
 
     input:focus,
     select:focus {
@@ -233,6 +223,7 @@
         </svg>
       </button>
       <button
+      id="open-info-btn"
         class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full text-[#5e6c84] transition-all duration-150 ease-in-out hover:bg-[#ebecf0] hover:text-[#172b4d] max-[960px]:h-[34px] max-[960px]:w-[34px]"
         type="button" aria-label="Help">
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"
@@ -242,6 +233,29 @@
           <path d="M12 17h.01" />
         </svg>
       </button>
+      <!-- information modal -->
+      <div id="information-backdrop" class="fixed inset-0 z-40 flex items-start justify-end pt-24">
+        <div id="information-panel" class="bg-white rounded-xl shadow-2xl overflow-hidden">
+          <!-- Header -->
+          <div class="flex justify-between px-6 pt-6 pb-4 ">
+            <div>
+              <div class="flex items-center justify-between">
+                <div>
+            </div>
+              <button id="close-info-btn" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 border border-slate-200 text-slate-400 hover:bg-slate-200 transition-colors">
+                ✕
+              </button>
+            </div>
+              <img src="img/info.png" alt="info" class="w-80 h-50 rounded-full">
+              <p class="text-[17px] font-semibold text-[#0F0C29] pl-4 ">Discover what's new on Nexus</p>
+              <p class="pl-4 pb-5">Get more out of Nexus with new features.</p>
+              <button id="save-info-btn" class="w-full py-2 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 active:scale-[0.98] transition-all duration-150">
+                View updates
+              </button>
+            </div>
+          </div>
+        </div>
+       </div>
       <div id="avatar-btn"
         class="open-profile-btn ml-1 inline-flex h-8 w-8 select-none items-center justify-center rounded-full bg-[linear-gradient(135deg,#ff8f73,#ff5630)] text-[0.82rem] font-semibold text-white"
         aria-label="Account">

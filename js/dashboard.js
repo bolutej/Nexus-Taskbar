@@ -1,5 +1,7 @@
 import { supabase } from '../supabase.js';
 import { initProfileModal } from "./profileModal.js";
+import { initInfoModal } from './info.js';
+
 
 
 let tasks = [];
@@ -328,6 +330,7 @@ async function init() {
   });
 
   initProfileModal();
+  initInfoModal();
   updateCounts();
 
   if (projectId) await loadTasks(projectId);
