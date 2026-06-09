@@ -2,7 +2,8 @@
 import { supabase } from '../supabase.js';
 import { logOut } from './auth.js';
 import { initProfileModal } from './profileModal.js';
-import { initInfoModal } from './info.js';
+import { initInfoModal } from './infoModal.js';
+import { initNotiModal } from './notiModal.js';
 
 // ✅ Protect page and fill in user info
 supabase.auth.onAuthStateChange((event, session) => {
@@ -104,6 +105,7 @@ const toastMsg = document.getElementById('toast-msg');
 
 initProfileModal();
 initInfoModal();
+initNotiModal();
 
 let currentSort = 'date-desc';
 

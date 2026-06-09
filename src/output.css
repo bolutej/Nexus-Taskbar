@@ -438,6 +438,9 @@
   .inline-flex {
     display: inline-flex;
   }
+  .h-0 {
+    height: calc(var(--spacing) * 0);
+  }
   .h-1 {
     height: calc(var(--spacing) * 1);
   }
@@ -465,8 +468,20 @@
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
+  .h-40 {
+    height: calc(var(--spacing) * 40);
+  }
   .h-50 {
     height: calc(var(--spacing) * 50);
+  }
+  .h-80 {
+    height: calc(var(--spacing) * 80);
+  }
+  .h-90 {
+    height: calc(var(--spacing) * 90);
+  }
+  .h-100 {
+    height: calc(var(--spacing) * 100);
   }
   .h-\[14px\] {
     height: 14px;
@@ -530,6 +545,12 @@
   }
   .w-80 {
     width: calc(var(--spacing) * 80);
+  }
+  .w-100 {
+    width: calc(var(--spacing) * 100);
+  }
+  .w-120 {
+    width: calc(var(--spacing) * 120);
   }
   .w-\[8\.5rem\] {
     width: 8.5rem;
@@ -1036,6 +1057,9 @@
   .object-contain {
     object-fit: contain;
   }
+  .p-1 {
+    padding: calc(var(--spacing) * 1);
+  }
   .p-1\.5 {
     padding: calc(var(--spacing) * 1.5);
   }
@@ -1159,6 +1183,12 @@
   .py-px {
     padding-block: 1px;
   }
+  .pt-1 {
+    padding-top: calc(var(--spacing) * 1);
+  }
+  .pt-1\.5 {
+    padding-top: calc(var(--spacing) * 1.5);
+  }
   .pt-2 {
     padding-top: calc(var(--spacing) * 2);
   }
@@ -1167,6 +1197,9 @@
   }
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
+  }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
   }
   .pt-6 {
     padding-top: calc(var(--spacing) * 6);
@@ -1201,8 +1234,14 @@
   .pr-4 {
     padding-right: calc(var(--spacing) * 4);
   }
+  .pr-5 {
+    padding-right: calc(var(--spacing) * 5);
+  }
   .pr-6 {
     padding-right: calc(var(--spacing) * 6);
+  }
+  .pr-20 {
+    padding-right: calc(var(--spacing) * 20);
   }
   .pr-\[0\.6rem\] {
     padding-right: 0.6rem;
@@ -1304,14 +1343,32 @@
   .text-\[1\.4rem\] {
     font-size: 1.4rem;
   }
+  .text-\[1\.5rem\] {
+    font-size: 1.5rem;
+  }
   .text-\[1\.08rem\] {
     font-size: 1.08rem;
+  }
+  .text-\[1rem\] {
+    font-size: 1rem;
+  }
+  .text-\[2rem\] {
+    font-size: 2rem;
+  }
+  .text-\[3rem\] {
+    font-size: 3rem;
   }
   .text-\[6px\] {
     font-size: 6px;
   }
   .text-\[9px\] {
     font-size: 9px;
+  }
+  .text-\[10px\] {
+    font-size: 10px;
+  }
+  .text-\[10rem\] {
+    font-size: 10rem;
   }
   .text-\[14px\] {
     font-size: 14px;
@@ -1321,6 +1378,33 @@
   }
   .text-\[17px\] {
     font-size: 17px;
+  }
+  .text-\[20px\] {
+    font-size: 20px;
+  }
+  .text-\[22px\] {
+    font-size: 22px;
+  }
+  .text-\[24px\] {
+    font-size: 24px;
+  }
+  .text-\[25px\] {
+    font-size: 25px;
+  }
+  .text-\[30px\] {
+    font-size: 30px;
+  }
+  .text-\[40px\] {
+    font-size: 40px;
+  }
+  .text-\[90px\] {
+    font-size: 90px;
+  }
+  .text-\[90rem\] {
+    font-size: 90rem;
+  }
+  .text-\[120px\] {
+    font-size: 120px;
   }
   .text-\[clamp\(4rem\,8vw\,6\.6rem\)\] {
     font-size: clamp(4rem, 8vw, 6.6rem);
@@ -1472,6 +1556,12 @@
   }
   .text-\[\#ff8f73\] {
     color: #ff8f73;
+  }
+  .text-\[2xl\] {
+    color: 2xl;
+  }
+  .text-\[rem\] {
+    color: rem;
   }
   .text-\[rgba\(9\,30\,66\,0\.8\)\] {
     color: rgba(9,30,66,0.8);

@@ -14,7 +14,12 @@ export function initInfoModal() {
         infoBackdrop.classList.remove('open');
         infoPanel.classList.remove('open');
     }
-
+    
     openInfoBtn.addEventListener('click', openInfoModal);
     closeInfoBtn.addEventListener('click', closeInfoModal)
+    infoBackdrop.addEventListener('click', (e) => {
+        if(e.target === infoBackdrop){
+            closeInfoModal();
+        }
+    });
 }
