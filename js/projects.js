@@ -5,6 +5,15 @@ import { initProfileModal } from './profileModal.js';
 import { initInfoModal } from './infoModal.js';
 import { initNotiModal } from './notiModal.js';
 
+let currentSort = 'date-desc';
+
+const sortOptions = {
+  'date-desc': { label: 'Newest first', fn: (a, b) => new Date(b.created_at) - new Date(a.created_at) },
+  'date-asc': { label: 'Oldest first', fn: (a, b) => new Date(a.created_at) - new Date(b.created_at) },
+  'name-asc': { label: 'Name A-Z', fn: (a, b) => a.name.localeCompare(b.name) },
+  'name-desc': { label: 'Name Z-A', fn: (a, b) => b.name.localeCompare(a.name) }
+};
+
 // ✅ Protect page and fill in user info
 supabase.auth.onAuthStateChange((event, session) => {
   if (session?.user) {
@@ -34,41 +43,40 @@ document.getElementById('logout-btn')?.addEventListener('click', async () => {
 });
 
 // ✅ Load projects from Supabase
-async function loadProjects(sort = 'date-desc') {
+async function loadProjects(sortKey = 'date-desc') {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
 
-  // Sort by date in Supabase
-  const ascending = sort === 'date-asc';
-  let query = supabase.from('projects').select('*');
-
-  if (sort === 'date-desc' || sort === 'date-asc') {
-    query = query.order('created_at', { ascending });
-  } else {
-    query = query.order('name', { ascending: sort === 'name-asc' });
-  }
-
   const { data: projects, error } = await supabase
     .from('projects')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('*');
 
+    
   if (error) { console.error('Error loading projects:', error.message); return; }
+
+  const sorted = [...projects].sort(sortOptions[sortKey].fn);
 
   const container = document.getElementById('projects-container');
   container.innerHTML = '';
 
-  if (projects.length === 0) {
+  if (sorted.length === 0) {
     container.innerHTML = '<p class="text-slate-400 text-sm p-4">No projects yet. Create one!</p>';
     return;
   }
 
-  projects.forEach(p => createProjectCard(p.name, p.description, p.id));
+  sorted.forEach(p => createProjectCard(p.name, p.description, p.id, p.created_at));
 
   const taskSummary = document.getElementById('task-summary');
-  if (taskSummary) taskSummary.textContent = `— ${projects.length} Project${projects.length !== 1 ? 's' : ''} across 2 teams`;
+  if (taskSummary) taskSummary.textContent = `— ${sorted.length} Project${sorted.length !== 1 ? 's' : ''} across 2 teams`;
 }
 
+async function updateProject(projectId, field, value){
+  const { error } = await supabase 
+    .from('projects')
+    .update({ [field]: value })
+    .eq('id', projectId);
+  if(error) { console.error('Error updating project:', error.message); throw error; }
+}
 // ✅ Save project to Supabase
 async function saveProject(name, description) {
   const { data: { session } } = await supabase.auth.getSession();
@@ -106,15 +114,6 @@ const toastMsg = document.getElementById('toast-msg');
 initProfileModal();
 initInfoModal();
 initNotiModal();
-
-let currentSort = 'date-desc';
-
-const sortOptions = {
-  'date-desc': { label: 'Newest first', fn: (a, b) => new Date(b.created_at) - new Date(a.created_at) },
-  'date-asc': { label: 'Oldest first', fn: (a, b) => new Date(a.created_at) - new Date(b.created_at) },
-  'name-asc': { label: 'Name A-Z', fn: (a, b) => a.name.localeCompare(b.name) },
-  'name-desc': { label: 'Name Z-A', fn: (a, b) => b.name.localeCompare(a.name) }
-};
 
 const sortBtn = document.getElementById('sort-btn');
 const sortMenu = document.createElement('div');
@@ -266,7 +265,7 @@ function showToast(msg) {
   }, 3000)
 }
 
-function createProjectCard(title, description, projectId) {
+function createProjectCard(title, description, projectId, createdAt) {
   const container = document.getElementById('projects-container');
 
   const card = document.createElement('div');
@@ -295,21 +294,73 @@ function createProjectCard(title, description, projectId) {
               <circle cx="19" cy="12" r="1.2" />
             </svg>
           </div>
-        <h1 class="font-bold text-xl pt-3">${title}</h1>
-        <p class="font-bold text-lg text-slate-200">${description}</p>
+        <h1 class="font-bold text-[30px] pt-3 cursor-pointer hover:bg-slate-50 rounded px-1 outline-none"
+            contenteditable="false"
+            data-field="name"
+            title="Click to edit">${title}</h1>
+
+        <p class="font-bold text-[25px] text-[#6c757d]" cursor-pointer hover:bg-slate-50 rounded px-1 outline-none
+            contenteditable="false"
+            data-field="description"
+            title="Click to edit">${description}</p>
+
         <p class="pt-2">100% completed</p>
         <div class="flex justify-between pt-10">
         <a href="dashboard.html?project=${encodeURIComponent(title)}&id=${projectId}">
   <button class="hover:underline">View</button>
 </a>
-        <span><i class="fa-regular fa-calendar mr-1"></i>${new Date().toLocaleDateString()}</span>
+        <span><i class="fa-regular fa-calendar mr-1"></i>${new Date(createdAt).toLocaleDateString()}</span>
       </div>
       </div>
     `;
 
+    card.querySelectorAll('[data-field]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        el.contentEditable = 'true';
+        el.focus();
+
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        el.classList.add('bg-slate-50', 'ring-2', 'ring-indigo-300');
+      });
+
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          el.blur();
+        }
+      });
+
+      el.addEventListener('blur', async () => {
+        el.contentEditable = "false";
+        el.classList.remove('bg-slate-50', 'ring-2', 'rig-indigo-300');
+
+        const field = el.dataset.field;
+        const newValue = el.textContent.trim();
+
+        if(!newValue) {
+          showToast('Field cannot be empty');
+          return;
+        }
+
+        try {
+          await updateProject(projectId, field, newValue);
+          showToast('Project updated');
+        } catch (err) {
+          showToast('Error saving changes');
+        }
+      });
+    });
+
   card.style.opacity = '0';
   card.style.transform = 'translateY(-10px)';
-  container.insertBefore(card, container.firstChild);
+  container.appendChild(card);
 
   requestAnimationFrame(() => {
     card.style.transition = 'opacity 300ms ease, transform 300ms ease';
