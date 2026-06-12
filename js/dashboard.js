@@ -2,6 +2,7 @@ import { supabase } from '../supabase.js';
 import { initProfileModal } from "./profileModal.js";
 import { initInfoModal } from './infoModal.js';
 import { initNotiModal } from './notiModal.js';
+import { initShareModal } from './shareModal.js';
 
 
 
@@ -334,6 +335,7 @@ async function init() {
   initInfoModal();
   initNotiModal();
   updateCounts();
+  initShareModal();
 
   if (projectId) await loadTasks(projectId);
 }

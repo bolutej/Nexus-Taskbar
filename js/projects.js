@@ -273,7 +273,7 @@ function createProjectCard(title, description, projectId, createdAt) {
 
   card.innerHTML = `
        <div class="">
-        <div class="flex justify-between">
+        <div class="flex justify-between mb-10px">
           <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-50 text-indigo-600 text-xs font-medium rounded-full">
             <i class="fa-solid fa-circle text-[6px]"></i>
             Active

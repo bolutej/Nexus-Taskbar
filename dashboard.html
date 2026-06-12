@@ -156,6 +156,12 @@
   #information-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
   #information-panel.open { opacity: 1; transform: scale(1) translateY(0); }
 
+  /* Share Modal */
+  #share-backdrop { opacity: 0; display: none; transition: opacity 200ms ease; }
+  #share-backdrop.open { opacity: 1; display: flex; }
+  #share-panel { opacity: 0; transform: scale(0.95) translateY(10px); transition: opacity 220ms ease, transform 220ms ease; }
+  #share-panel.open { opacity: 1; transform: scale(1) translateY(0); }
+
     input:focus,
     select:focus {
       outline: none;
@@ -445,7 +451,9 @@
         </span>
         4 members
       </button>
+      <div class="relative">
       <button
+        id="filter-btn"
         class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
         type="button">
         <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
@@ -454,6 +462,13 @@
         </svg>
         Filter
       </button>
+      <div id="filter-menu" class="hidden absolute right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-lg z-50 py-1 min-w-[160px]">
+        <button class="filter-option w-full text-left px-4 py-2 text-sm text-[#172b4d] hover:bg-slate-50 transition-colors" data-priority="all">All priorities</button>
+        <button class="filter-option w-full text-left px-4 py-2 text-sm text-[#172b4d] hover:bg-slate-50 transition-colors" data-priority="high">🔴 High</button>
+        <button class="filter-option w-full text-left px-4 py-2 text-sm text-[#172b4d] hover:bg-slate-50 transition-colors" data-priority="medium">🟡 Medium</button>
+        <button class="filter-option w-full text-left px-4 py-2 text-sm text-[#172b4d] hover:bg-slate-50 transition-colors" data-priority="low">🟢 Low</button>
+      </div>
+    </div>
       <button id="add-task-btn"
         class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
         type="button">
@@ -464,6 +479,7 @@
         Add Task
       </button>
       <button
+      id="open-share-btn"
         class="inline-flex h-9 items-center gap-[0.45rem] rounded-[6px] border border-transparent bg-[#f4f5f7] px-[0.9rem] text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
         type="button">
         <svg class="text-[#5e6c84]" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
@@ -475,6 +491,55 @@
         </svg>
         Share
       </button>
+      <!-- share Modal -->
+      <div id="share-backdrop" class="fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+        <div id="share-panel" class="bg-white rounded-xl border border-slate-200 w-96 overflow-hidden">
+      
+          <!-- Header -->
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <span class="text-[15px] font-medium">Share board</span>
+            </div>
+            <button id="close-share-btn" class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 transition-colors">✕</button>
+          </div>
+      
+          <div class="p-5 space-y-5">
+      
+            <!-- Invite input -->
+            <div class="flex gap-2">
+              <input class="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-300" type="text" placeholder="Email address or name" />
+              <button class="text-sm px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">Invite</button>
+            </div>
+      
+            <!-- Copy link -->
+            <div class="flex items-center gap-3 bg-slate-50 border border-slate-200 rounded-lg px-4 py-3">
+              <div class="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-slate-700">Share with a link</p>
+                <p class="text-xs text-slate-400">Anyone with the link can view</p>
+              </div>
+              <button class="text-xs px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">Copy link</button>
+            </div>
+      
+            <!-- Members -->
+            <div>
+              <p class="text-xs font-medium text-slate-400 uppercase tracking-wide mb-3">Board members</p>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 text-xs font-medium flex items-center justify-center flex-shrink-0">TE</div>
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-slate-700">Tejumola Emmanuel</p>
+                  <p class="text-xs text-slate-400">@tejbolu</p>
+                </div>
+                <span class="text-[11px] text-slate-400 border border-slate-200 rounded-md px-2 py-0.5">you</span>
+              </div>
+            </div>
+      
+          </div>
+        </div>
+      </div>
       <button
         class="inline-flex h-9 w-9 items-center justify-center rounded-[6px] border border-transparent bg-[#f4f5f7] px-0 text-[0.84rem] font-medium text-[#172b4d] transition-all duration-150 ease-in-out hover:bg-[#ebecf0]"
         type="button" aria-label="More">
@@ -608,11 +673,9 @@
             <select
               class="detail-input w-full cursor-pointer appearance-none rounded-[6px] border border-transparent bg-transparent px-2 py-[0.35rem] pr-6 text-[0.84rem] text-[#172b4d] outline-none transition-all duration-150 ease-in-out hover:bg-[#ebecf0] focus:border-[#1868db] focus:bg-white focus:ring-2 focus:ring-[rgba(24,104,219,0.18)]"
               id="task-priority-select">
-              <option value="highest">&uarr;&uarr; Highest</option>
               <option value="high">&uarr; High</option>
               <option value="medium">= Medium</option>
               <option value="low">&darr; Low</option>
-              <option value="lowest">&darr;&darr; Lowest</option>
             </select>
           </div>
 
