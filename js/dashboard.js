@@ -13,7 +13,59 @@ let draggedCard = null;
 let toastTimer;
 let userInitials = 'T';
 let currentTaskId = null;
+let currentFilter = 'all';
 
+const filterBtn = document.getElementById('filter-btn');
+const filterMenu = document.getElementById('filter-menu');
+
+filterBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  filterMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', () => filterMenu.classList.add('hidden'));
+
+filterMenu.addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-option');
+  if(!btn) return;
+
+  currentFilter = btn.dataset.priority;
+  filterMenu.classList.add('hidden');
+
+  //update button label
+  filterBtn.innerHTML = `
+  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+    </svg>
+    ${currentFilter === 'all' ? 'Filter' : `Priority: ${currentFilter}`}
+  `;
+
+  applyFilter(currentFilter);
+});
+
+function applyFilter(priority) {
+  document.querySelectorAll('.task-card').forEach(card => {
+    const taskId = card.dataset.id;
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    if(priority === 'all' || task.priority === priority) {
+      card.style.opacity = '1';
+      card.style.pointerEvents = 'auto';
+    } else {
+      card.style.opacity = '0.25';
+      card.style.pointerEvents = 'none';
+    }
+  });
+  // const cards = document.querySelectorAll('.task-card');
+  // console.log('total cards found:', cards.length);
+  
+  // cards.forEach(card => {
+  //   const taskId = card.dataset.id;
+  //   const task = tasks.find(t => t.id === taskId);
+  //   console.log('card id:', taskId, 'task found:', task, 'priority:', task?.priority);
+  // });
+}
 // Add this near the top of the file, with your other helpers
 function parseTags(raw) {
   if (Array.isArray(raw)) return raw;
@@ -30,7 +82,7 @@ function parseTags(raw) {
 async function loadTasks(projectId) {
   if (!projectId) return;
 
-  const { data: tasks, error } = await supabase
+  const { data: fetchedTasks, error } = await supabase
     .from('tasks')
     .select('*')
     .eq('project_id', projectId)
@@ -38,14 +90,16 @@ async function loadTasks(projectId) {
 
   if (error) { console.error('Error loading tasks:', error.message); return; }
 
-  tasks.forEach(task => {
+  fetchedTasks.forEach(task => {
     const t = {
       id: task.id,
       title: task.title,
+      description: task.description,
       tags: parseTags(task.tags),
       col: task.col,
       priority: task.priority
     };
+    tasks.push(t);
     renderCard(t);
   });
 
@@ -56,7 +110,6 @@ async function loadTasks(projectId) {
 async function saveTask(task, projectId) {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) return;
-
   const { data, error } = await supabase
     .from('tasks')
     .insert([{
@@ -98,8 +151,23 @@ async function deleteTask(taskId) {
 
 const backdrop = document.getElementById('modal-backdrop');
 
-const openModal = (col = 'backlog') => {
+const openModal = (col = 'backlog', existingTask = null) => {
+  console.log('openModal called with:', existingTask);
   document.getElementById('task-col-select').value = col;
+
+  if(existingTask){
+    document.getElementById('task-title-input').value = existingTask.title;
+    document.getElementById('modalDesc').value = existingTask.description ?? '';
+    document.getElementById('task-priority-select').value = existingTask.priority ?? 'medium';
+    selectedTags = existingTask.tags ?? [];
+    renderTagSelector();
+  } else {
+    document.getElementById('task-title-input').value = '';
+    document.getElementById('modalDesc').value = '';
+    selectedTags = ['frontend'];
+    renderTagSelector();
+  }
+
   backdrop.classList.add('open');
   setTimeout(() => document.getElementById('task-title-input').focus(), 50);
 };
@@ -159,7 +227,7 @@ document.getElementById('modal-delete')?.addEventListener('click', async () => {
 
 async function createTask() {
   const title = document.getElementById('task-title-input').value.trim();
-  const description = document.getElementById('modaldesc')?.value.trim() ?? '';
+  const description = document.getElementById('modalDesc')?.value.trim() ?? '';
   if (!title) {
     document.getElementById('title-error').classList.remove('hidden');
     document.getElementById('task-title-input').focus();
@@ -201,7 +269,7 @@ function renderCard(task) {
   // Add this inside renderCard() after card.draggable = true
   card.addEventListener('click', () => {
     currentTaskId = task.id;
-    openModal(task.col);
+    openModal(task.col, task);
   }); 
   const priorityIcon = task.priority === 'high'
     ? `<svg class="priority-high" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>`
