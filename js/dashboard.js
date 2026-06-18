@@ -152,16 +152,19 @@ async function deleteTask(taskId) {
 const backdrop = document.getElementById('modal-backdrop');
 
 const openModal = (col = 'backlog', existingTask = null) => {
-  console.log('openModal called with:', existingTask);
+  const submitBtn = document.getElementById('modal-submit');
+
   document.getElementById('task-col-select').value = col;
 
   if(existingTask){
+    submitBtn.textContent = 'Save chnages';
     document.getElementById('task-title-input').value = existingTask.title;
     document.getElementById('modalDesc').value = existingTask.description ?? '';
     document.getElementById('task-priority-select').value = existingTask.priority ?? 'medium';
     selectedTags = existingTask.tags ?? [];
     renderTagSelector();
   } else {
+    submitBtn.textContent = 'Create task';
     document.getElementById('task-title-input').value = '';
     document.getElementById('modalDesc').value = '';
     selectedTags = ['frontend'];
@@ -177,6 +180,7 @@ const closeModal = () => {
   document.getElementById('task-title-input').value = '';
   document.getElementById('title-error').classList.add('hidden');
   selectedTags = ['frontend'];
+  currentTaskId = null;
   renderTagSelector();
 };
 
@@ -240,7 +244,31 @@ async function createTask() {
   const urlParams = new URLSearchParams(window.location.search);
   const projectId = urlParams.get('id');
 
-  const task = { title, description, tags: [...selectedTags], col, priority };
+  if(currentTaskId) {
+    const updates = { title, description, col, priority, tags: JSON.stringify([...selectedTags])};
+
+    try{
+      await updateTask(currentTaskId, updates);
+      const task = tasks.find(t => t.id === currentTaskId);
+      if(task) {
+        task.title = title;
+        task.description = description;
+        task.col = col;
+        task.proirity = priority;
+        task.tags = [... selectedTags];
+      }
+
+      const card = document.querySelector(`[data-id="${currentTaskId}"]`);
+      if(card) card.remove();
+      renderCard(task);
+      updateCounts();
+      closeModal();
+      showToast(`"${title}" updated`);
+    } catch(error) {
+      showToast('Error updating task. Try again.');
+    }
+  }else {
+     const task = { title, description, tags: [...selectedTags], col, priority };
 
   try {
     const saved = await saveTask(task, projectId);
@@ -253,9 +281,20 @@ async function createTask() {
   } catch (error) {
     showToast('Error creating task. Try again.');
   }
+  }
+
+
+ 
 }
 
+async function updateTask(taskId, updates) {
+  const {error} = await supabase
+  .from('tasks')
+  .update(updates)
+  .eq('id', taskId);
 
+  if(error) { console.error('Error updating task:', error.message); throw error;}
+}
 //Render card
 function renderCard(task) {
   const body = document.getElementById(`body-${task.col}`);
@@ -293,6 +332,9 @@ function renderCard(task) {
   card.innerHTML = `
   <div class="flex flex-wrap gap-1 mb-2">${tagsHTML}</div>
   <div class="text-[0.88rem] font-medium text-[#172b4d] leading-snug mb-2.5">${task.title}</div>
+  <div class="text-[0.78rem] text-[#97a0af] leading-snug mb-2.5 line-clamp-2">
+    ${task.description ? task.description : '<span class="italic">No description</span>'}
+  </div>
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-1.5">
       <div class="task-id-icon ${iconClass} w-4 h-4 rounded-[3px] flex items-center justify-center">${iconContent}</div>
